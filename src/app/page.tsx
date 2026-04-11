@@ -1,65 +1,95 @@
-import Image from "next/image";
+import Navbar from "@/components/landing/Navbar"
+import Hero from "@/components/landing/Hero"
+import UpcomingDiklat from "@/components/landing/UpcomingDiklat"
+import Leadership from "@/components/landing/Leadership"
+import OtherDiklat from "@/components/landing/OtherDiklat"
+import { MapPin, Phone, Mail } from "lucide-react"
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-white">
+      <Navbar />
+      <Hero />
+      
+      {/* Tentang Section */}
+      <section id="tentang" className="py-24 bg-accent/10 relative overflow-hidden">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center gap-16">
+            <div className="w-full md:w-1/2 aspect-video bg-secondary/5 rounded-[3rem] border-4 border-white shadow-2xl flex items-center justify-center text-secondary/20 font-bold text-4xl">
+              FOTO PESANTREN
+            </div>
+            <div className="w-full md:w-1/2">
+              <h2 className="text-4xl font-bold text-secondary mb-6">Tentang <span className="text-primary italic">Pesantren Al-Hasanah</span></h2>
+              <div className="w-20 h-1.5 bg-primary rounded-full mb-8" />
+              <p className="text-secondary/70 text-lg leading-relaxed mb-8">
+                Pesantren Al-Hasanah Cibeuti adalah pusat pendidikan Islam klasik yang berfokus pada pelestarian tradisi kitab kuning dengan metode intensif. Kami menyelenggarakan program Diklat Pasaran berkala untuk mendalami ilmu agama bagi santri dan masyarakat umum.
+              </p>
+              <ul className="space-y-4">
+                {[
+                  "Pengajaran Kitab Kuning Otentik",
+                  "Dibimbing Langsung oleh Dewan Kiyai",
+                  "Lingkungan Belajar Khidmat di Al-Hasanah",
+                  "Sertifikasi Diklat Resmi Pesantren"
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-4 text-secondary/80 font-semibold">
+                    <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center text-primary">
+                      ✓
+                    </div>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <UpcomingDiklat />
+      <OtherDiklat />
+      <Leadership />
+
+      {/* Footer / Kontak */}
+      <footer className="py-24 bg-secondary text-white border-t border-primary/20">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-20">
+            <div>
+              <h4 className="text-2xl font-black text-primary mb-8 uppercase tracking-widest">AL-HASANAH</h4>
+              <p className="text-white/60 leading-relaxed max-w-sm">
+                Pondok Pesantren Al-Hasanah Cibeuti, KH. Lili Syamsul Romli. Berkhidmat untuk mencetak generasi berilmu dan beradab melalui tradisi kitab kuning.
+              </p>
+            </div>
+            <div className="space-y-6">
+              <h5 className="text-lg font-bold uppercase tracking-widest mb-4">Lokasi & Alamat</h5>
+              <div className="flex items-start gap-4">
+                <MapPin className="w-6 h-6 text-primary shrink-0" />
+                <p className="text-white/60 text-sm leading-relaxed">
+                  Jl. Raya Cibeuti Rt. 001 / Rw. 006 Kel. Cibeuti Kec. Kawalu Kota. Tasikmalaya Jawa Barat (46182)
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <Phone className="w-5 h-5 text-primary shrink-0" />
+                <p className="text-white/60 text-sm">+62 8xx-xxxx-xxxx</p>
+              </div>
+            </div>
+            <div className="space-y-6">
+              <h5 className="text-lg font-bold uppercase tracking-widest mb-4">Sekretariat</h5>
+              <p className="text-white/60 text-sm leading-relaxed">
+                Kitab takriran, alat tulis, dan pendaftaran offline tersedia di Kantor Sekretariat Putra & Putri Pesantren Al-Hasanah.
+              </p>
+              <div className="flex gap-4 pt-4">
+                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-primary transition-colors cursor-pointer">FB</div>
+                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-primary transition-colors cursor-pointer">IG</div>
+                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-primary transition-colors cursor-pointer">WA</div>
+              </div>
+            </div>
+          </div>
+          <div className="pt-12 border-t border-white/10 text-center">
+            <p className="text-white/30 text-xs font-bold uppercase tracking-widest">
+              © {new Date().getFullYear()} Pesantren Al-Hasanah Cibeuti. Seluruh Hak Cipta Dilindungi.
+            </p>
+          </div>
         </div>
-      </main>
-    </div>
-  );
+      </footer>
+    </main>
+  )
 }
