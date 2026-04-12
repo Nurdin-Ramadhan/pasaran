@@ -1,109 +1,138 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { BookOpen, Calendar, MapPin, User, Info } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Calendar, User, Info, CheckCircle2, Star } from "lucide-react"
 
-const kits = [
-  { fan: "Fan Arudh", kitab: "Mukhtashor Syafi", desc: "Ilmu timbangan syi'ir Arab." },
-  { fan: "Fan Tauhid", kitab: "Tijan Addarori", desc: "Ilmu dasar akidah dan sifat-sifat Allah." },
-  { fan: "Fan Maqulat", kitab: "Maqulat Mama Syuja'i & Mama Syatibi", desc: "Kajian logika 10 kategori (Al-Maqulat al-Asyr)." },
-  { fan: "Fan Istiqoq", kitab: "Tuhfatul Mustaq", desc: "Ilmu asal-usul pembentukan kata." },
-  { fan: "Fan Wadho'", kitab: "Wadh'ul Kalimah", desc: "Ilmu peletakan makna pada lafadz." },
-]
+const upcomingProgram = {
+  title: "DZULHIJJAH",
+  dates: "1 - 9 Dzulhijjah",
+  description: "Pengajian Intensif Kitab Kuning khusus menyambut bulan Dzulhijjah.",
+  features: [
+    "Pengajaran Kitab Kuning Otentik",
+    "Dibimbing Langsung oleh Dewan Kiyai",
+    "Lingkungan Belajar Khidmat di Al-Hasanah",
+    "Sertifikasi Diklat Resmi Pesantren"
+  ]
+}
 
 export default function UpcomingDiklat() {
   return (
-    <section id="diklat" className="py-24 bg-white relative">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 px-4 py-1.5 text-sm font-bold uppercase tracking-widest">Periode Ke-148</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-secondary mb-6 leading-tight">
-            MA'LUMAT <span className="text-primary italic font-serif">DZULHIJJAH</span>
+    <section id="diklat" className="py-24 bg-background relative overflow-hidden">
+      {/* Dynamic Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+      
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-xs font-black mb-6 border border-primary/20 tracking-widest uppercase"
+          >
+            <Star className="w-3 h-3 fill-primary" />
+            Program Terdekat
+          </motion.div>
+          <h2 className="text-5xl md:text-6xl font-black text-foreground mb-6 tracking-tighter uppercase">
+            DIKLAT <span className="text-primary italic">PASARAN</span>
           </h2>
-          <p className="text-secondary/70 max-w-3xl mx-auto leading-relaxed text-lg">
-            In Syaa Allah di Pondok Pesantren Al-Hasanah Cibeuti akan dilaksanakan Pengajian Diklat (PASARAN/KILATAN) dengan kajian kitab-kitab sebagai berikut:
-          </p>
+          <div className="w-24 h-2 bg-primary mx-auto rounded-full shadow-[0_0_15px_rgba(201,168,76,0.5)]" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {kits.map((kit, index) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Side: Info Card */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="glass-card rounded-[3rem] p-10 md:p-16 relative overflow-hidden group"
+          >
+            <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 blur-3xl rounded-full group-hover:bg-primary/20 transition-all duration-700" />
+            
+            <h3 className="text-6xl font-black text-primary mb-4 tracking-tighter dark:neon-gold">{upcomingProgram.title}</h3>
+            <p className="text-2xl font-bold text-foreground/80 mb-8 italic">"{upcomingProgram.description}"</p>
+            
+            <div className="space-y-6">
+              {upcomingProgram.features.map((feature, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex items-center gap-4 group/item"
+                >
+                  <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
+                  <span className="text-lg font-medium text-foreground/70 group-hover/item:text-foreground transition-colors">{feature}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right Side: Details & Action */}
+          <div className="space-y-8">
             <motion.div
-              key={kit.kitab}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              className="bg-secondary text-secondary-foreground rounded-[2.5rem] p-10 relative overflow-hidden shadow-2xl border border-white/10"
             >
-              <Card className="h-full border-2 border-primary/10 hover:border-primary/40 transition-all rounded-[2rem] bg-white group">
-                <CardHeader className="p-6">
-                  <p className="text-primary font-bold text-xs uppercase tracking-tighter mb-2">{kit.fan}</p>
-                  <CardTitle className="text-xl font-bold text-secondary group-hover:text-primary transition-colors">{kit.kitab}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 pt-0">
-                  <p className="text-secondary/50 text-sm leading-relaxed">{kit.desc}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-primary/10 blur-3xl rounded-full" />
+              <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="space-y-8 border-b md:border-b-0 md:border-r border-white/10 pb-8 md:pb-0 md:pr-8">
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 shadow-inner">
+                      <Calendar className="w-7 h-7 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Pelaksanaan</p>
+                      <p className="text-xl font-black">{upcomingProgram.dates}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 shadow-inner">
+                      <User className="w-7 h-7 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Mu'allim (Guru)</p>
+                      <p className="text-lg font-black leading-tight">Syaikhuna Aang <br/>KH. Lili Syamsul Romli</p>
+                    </div>
+                  </div>
+                </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8"
-        >
-          <div className="lg:col-span-2 bg-secondary text-white rounded-[2.5rem] p-10 relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full" />
-            <div className="relative z-10 flex flex-col md:flex-row justify-between gap-10">
-              <div className="space-y-8">
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
-                    <Calendar className="w-7 h-7 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Waktu Pelaksanaan</p>
-                    <p className="text-xl font-bold">1 - 9 Dzulhijjah</p>
-                    <p className="text-white/40 text-sm italic">(Selama 9 Hari)</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
-                    <User className="w-7 h-7 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Mu'allim (Guru)</p>
-                    <p className="text-xl font-bold">Syaikhuna Aang KH. Lili Syamsul Romli</p>
+                <div className="flex flex-col justify-center">
+                  <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-md">
+                    <div className="flex items-center gap-2 text-primary font-bold mb-3">
+                      <Info className="w-4 h-4" />
+                      <span className="text-xs uppercase tracking-widest">Informasi Penting</span>
+                    </div>
+                    <p className="text-sm text-white/70 leading-relaxed italic">
+                      Lughoh dan Surahan menggunakan <span className="text-primary font-bold">Bahasa Sunda</span>. Kitab dan alat tulis tersedia di Sekretariat.
+                    </p>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col justify-end">
-                <div className="bg-white/5 border border-white/10 p-6 rounded-2xl">
-                  <div className="flex items-center gap-2 text-primary font-bold mb-2">
-                    <Info className="w-4 h-4" />
-                    <span>Informasi Lughoh</span>
-                  </div>
-                  <p className="text-sm text-white/70 leading-relaxed">
-                    Lughoh dan Surahan menggunakan <span className="text-white font-bold">Bahasa Sunda</span>. Kitab dan alat tulis tersedia di Sekretariat.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-primary p-10 rounded-[2.5rem] flex flex-col justify-center items-center text-center text-white shadow-2xl shadow-primary/20">
-            <h4 className="text-2xl font-bold mb-4">Siap Bergabung?</h4>
-            <p className="text-white/80 mb-8 leading-relaxed">Segera daftarkan diri Anda untuk mengikuti pengajian Diklat ini !</p>
-            <button 
-              onClick={() => window.location.href = '/daftar'}
-              className="w-full bg-secondary hover:bg-white hover:text-secondary text-white px-8 py-5 rounded-2xl font-extrabold transition-all shadow-xl"
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-primary p-10 rounded-[2.5rem] flex flex-col items-center text-center text-primary-foreground shadow-2xl shadow-primary/20 border border-white/20 relative overflow-hidden group"
             >
-              DAFTAR SEKARANG
-            </button>
+              <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-500" />
+              <h4 className="text-3xl font-black mb-4 relative z-10 tracking-tighter">SIAP BERGABUNG?</h4>
+              <p className="text-primary-foreground/80 mb-8 leading-relaxed font-bold relative z-10">Segera daftarkan diri Anda untuk mengikuti pengajian Diklat ini !</p>
+              <button 
+                onClick={() => window.location.href = '/daftar'}
+                className="w-full bg-secondary hover:bg-white hover:text-secondary text-white px-8 py-5 rounded-2xl font-black text-xl transition-all shadow-xl hover:scale-105 active:scale-95 relative z-10"
+              >
+                DAFTAR SEKARANG
+              </button>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )
