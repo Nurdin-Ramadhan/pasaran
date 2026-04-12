@@ -14,7 +14,7 @@ export default function Navbar() {
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-black text-secondary flex items-center gap-3 tracking-tighter">
           <Image src="/logo.png" alt="Logo" width={40} height={40} className="w-10 h-10 object-contain" />
-          PASARAN
+          Al-Hasanah 
         </Link>
         <div className="hidden md:flex gap-8 items-center font-medium text-secondary/80">
           <Link href="#tentang" className="hover:text-primary transition-colors">Tentang</Link>
