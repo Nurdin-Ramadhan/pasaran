@@ -12,14 +12,14 @@ export const registrationSchema = z.object({
   pesantren_asal: z.string().min(3, "Pesantren asal minimal 3 karakter"),
   jenis_diklat: z.enum(['MAULID', 'SYABAN', 'RAMADHAN', 'DZULHIJJAH']),
   tahun_diklat: z.number(),
-  periode: z.number().optional(),
+  periode: z.number(),
   biaya_pendaftaran: z.number().min(0),
   uang_miftah: z.number().min(0),
   biaya_listrik: z.number().min(0),
   kos_makan: z.number().min(0),
   tafaruqon: z.number().min(0),
   belanja_kitab_nominal: z.number().min(0),
-  rincian_belanja: z.string().optional().default(""),
+  rincian_belanja: z.string(),
 })
 
 export type RegistrationValues = z.infer<typeof registrationSchema>

@@ -256,8 +256,8 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
   });
 
   // Use base64 or absolute path for local images in react-pdf
-  // For this environment, we'll try to use the path from public
-  const logoPath = "/home/arch-din1/Desktop/pasaran/public/logo.png";
+  // For this environment, we'll use the relative path from public
+  const logoPath = "/logo.png";
 
   return (
     <Document title={`Pendaftaran_${data.nama_lengkap}`}>
