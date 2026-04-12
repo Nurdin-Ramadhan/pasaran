@@ -2,7 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server"
 import { registrationSchema, RegistrationValues } from "@/lib/validations/registration"
-import { nanoid } from "nanoid"
+import { randomUUID } from "crypto"
 
 export async function registerParticipant(data: RegistrationValues) {
   const supabase = await createClient()
@@ -13,8 +13,8 @@ export async function registerParticipant(data: RegistrationValues) {
     return { success: false, error: "Data tidak valid" }
   }
 
-  // Generate unique QR Code ID
-  const qr_code_id = `PASARAN-${nanoid(10).toUpperCase()}`
+  // Generate unique UUID for QR Code using built-in crypto
+  const qr_code_id = randomUUID()
 
   const { error } = await supabase.from("peserta_diklat").insert({
     ...validation.data,

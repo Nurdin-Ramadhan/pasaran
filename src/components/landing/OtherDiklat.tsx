@@ -1,12 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
 const otherPrograms = [
   {
-    title: "MAULID (Periode 142)",
+    title: "MAULID",
     dates: "28 Shofar - 12 Robi'ul Awwal",
     sections: [
       { 
@@ -20,7 +19,7 @@ const otherPrograms = [
     ]
   },
   {
-    title: "SYA'BAN (Periode 147)",
+    title: "SYA'BAN",
     dates: "10 - 26 Sya'ban",
     sections: [
       { 
@@ -34,7 +33,7 @@ const otherPrograms = [
     ]
   },
   {
-    title: "RAMADHAN (Periode 148)",
+    title: "RAMADHAN",
     dates: "1 - 23 Ramadhan",
     sections: [
       { 
@@ -73,7 +72,7 @@ export default function OtherDiklat() {
             >
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
                 <div>
-                  <h3 className="text-3xl font-black text-secondary">{prog.title}</h3>
+                  <h3 className="text-3xl font-black text-secondary tracking-tighter uppercase">{prog.title}</h3>
                   <p className="text-primary font-bold flex items-center gap-2 mt-2 tracking-widest uppercase text-sm">
                     <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
                     {prog.dates}

@@ -20,7 +20,7 @@ export default function UpcomingDiklat() {
         <div className="text-center mb-16">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 px-4 py-1.5 text-sm font-bold uppercase tracking-widest">Periode Ke-148</Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-secondary mb-6 leading-tight">
-            MA'LUMAT <span className="text-primary italic font-serif">DZULHIJJAH 1447 H</span>
+            MA'LUMAT <span className="text-primary italic font-serif">DZULHIJJAH</span>
           </h2>
           <p className="text-secondary/70 max-w-3xl mx-auto leading-relaxed text-lg">
             In Syaa Allah di Pondok Pesantren Al-Hasanah Cibeuti akan dilaksanakan Pengajian Diklat (PASARAN/KILATAN) dengan kajian kitab-kitab sebagai berikut:
@@ -65,7 +65,7 @@ export default function UpcomingDiklat() {
                   </div>
                   <div>
                     <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Waktu Pelaksanaan</p>
-                    <p className="text-xl font-bold">1 - 9 Dzulhijjah 1447 H</p>
+                    <p className="text-xl font-bold">1 - 9 Dzulhijjah</p>
                     <p className="text-white/40 text-sm italic">(Selama 9 Hari)</p>
                   </div>
                 </div>
@@ -95,7 +95,7 @@ export default function UpcomingDiklat() {
           
           <div className="bg-primary p-10 rounded-[2.5rem] flex flex-col justify-center items-center text-center text-white shadow-2xl shadow-primary/20">
             <h4 className="text-2xl font-bold mb-4">Siap Bergabung?</h4>
-            <p className="text-white/80 mb-8 leading-relaxed">Segera daftarkan diri Anda untuk mengamankan kuota pengajian.</p>
+            <p className="text-white/80 mb-8 leading-relaxed">Segera daftarkan diri Anda untuk mengikuti pengajian Diklat ini !</p>
             <button 
               onClick={() => window.location.href = '/daftar'}
               className="w-full bg-secondary hover:bg-white hover:text-secondary text-white px-8 py-5 rounded-2xl font-extrabold transition-all shadow-xl"

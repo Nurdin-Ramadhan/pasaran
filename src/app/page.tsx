@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Navbar from "@/components/landing/Navbar"
 import Hero from "@/components/landing/Hero"
 import UpcomingDiklat from "@/components/landing/UpcomingDiklat"
@@ -15,8 +16,14 @@ export default function Home() {
       <section id="tentang" className="py-24 bg-accent/10 relative overflow-hidden">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center gap-16">
-            <div className="w-full md:w-1/2 aspect-video bg-secondary/5 rounded-[3rem] border-4 border-white shadow-2xl flex items-center justify-center text-secondary/20 font-bold text-4xl">
-              FOTO PESANTREN
+            <div className="w-full md:w-1/2 aspect-video relative rounded-[3rem] overflow-hidden border-4 border-white shadow-2xl group">
+              <Image 
+                src="/pasaran.jpg" 
+                alt="Pesantren Al-Hasanah" 
+                fill 
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-secondary/40 to-transparent" />
             </div>
             <div className="w-full md:w-1/2">
               <h2 className="text-4xl font-bold text-secondary mb-6">Tentang <span className="text-primary italic">Pesantren Al-Hasanah</span></h2>

@@ -130,8 +130,28 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>RINCIAN PROGRAM & BIAYA</Text>
           <View style={styles.row}><Text style={styles.label}>Jenis Diklat</Text><Text style={styles.value}>{data.jenis_diklat} {data.tahun_diklat}</Text></View>
-          <View style={styles.row}><Text style={styles.label}>Biaya Pendaftaran</Text><Text style={styles.value}>Rp {data.biaya_pendaftaran.toLocaleString('id-ID')}</Text></View>
-          <View style={styles.row}><Text style={styles.label}>Rincian Kitab</Text><Text style={styles.value}>{data.rincian_belanja}</Text></View>
+          
+          <View style={{ marginTop: 10, paddingLeft: 10, borderLeft: 2, borderLeftColor: '#eeeeee' }}>
+            <View style={styles.row}><Text style={styles.label}>Uang Miftah</Text><Text style={styles.value}>Rp {(data.uang_miftah || 0).toLocaleString('id-ID')}</Text></View>
+            <View style={styles.row}><Text style={styles.label}>Biaya Listrik</Text><Text style={styles.value}>Rp {(data.biaya_listrik || 0).toLocaleString('id-ID')}</Text></View>
+            <View style={styles.row}><Text style={styles.label}>Kos Makan</Text><Text style={styles.value}>Rp {(data.kos_makan || 0).toLocaleString('id-ID')}</Text></View>
+            <View style={styles.row}><Text style={styles.label}>Tafaruqon</Text><Text style={styles.value}>Rp {(data.tafaruqon || 0).toLocaleString('id-ID')}</Text></View>
+          </View>
+          
+          <View style={{ ...styles.row, borderBottom: 2, borderBottomColor: '#B8860B', marginTop: 5 }}>
+            <Text style={{ ...styles.label, color: '#1A3C34', fontWeight: 'bold' }}>TOTAL PENDAFTARAN</Text>
+            <Text style={{ ...styles.value, fontWeight: 'bold', fontSize: 13, color: '#1A3C34' }}>
+              Rp {data.biaya_pendaftaran.toLocaleString('id-ID')}
+            </Text>
+          </View>
+          
+          {data.belanja_kitab_nominal > 0 && (
+            <View style={{ ...styles.row, marginTop: 10 }}>
+              <Text style={styles.label}>Belanja Kitab</Text>
+              <Text style={styles.value}>Rp {data.belanja_kitab_nominal.toLocaleString('id-ID')}</Text>
+            </View>
+          )}
+          <View style={styles.row}><Text style={styles.label}>Rincian Kitab</Text><Text style={styles.value}>{data.rincian_belanja || "-"}</Text></View>
         </View>
 
         {/* QR Code Section */}

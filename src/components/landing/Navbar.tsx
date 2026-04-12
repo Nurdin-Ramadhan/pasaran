@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 
 export default function Navbar() {
@@ -11,8 +12,8 @@ export default function Navbar() {
       className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-primary/20"
     >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-secondary flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-full" />
+        <Link href="/" className="text-2xl font-black text-secondary flex items-center gap-3 tracking-tighter">
+          <Image src="/logo.png" alt="Logo" width={40} height={40} className="w-10 h-10 object-contain" />
           PASARAN
         </Link>
         <div className="hidden md:flex gap-8 items-center font-medium text-secondary/80">
