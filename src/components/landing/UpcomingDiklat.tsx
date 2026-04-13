@@ -8,10 +8,11 @@ const upcomingProgram = {
   dates: "1 - 9 Dzulhijjah",
   description: "Pengajian Intensif Kitab Kuning khusus menyambut bulan Dzulhijjah.",
   features: [
-    "Pengajaran Kitab Kuning Otentik",
-    "Dibimbing Langsung oleh Dewan Kiyai",
-    "Lingkungan Belajar Khidmat di Al-Hasanah",
-    "Sertifikasi Diklat Resmi Pesantren"
+    "Fan Arudh : Mukhtashor Syafi",
+    "Fan Tahuhid : Tijan Addarori",
+    "Fan Maqulat : Maqulat Mama Syuja'i Kudang Tasik & Maqulat Mama Syatibi Gentur Cianjur",
+    "Fan Istiqoq : Tuhfatul Mustaq",
+    "Fan Wadho' : Wadh'ul Kalimah"
   ]
 }
 

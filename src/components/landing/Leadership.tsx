@@ -3,9 +3,9 @@
 import { motion } from "framer-motion"
 
 const leaders = [
-  { name: "KH. Nama Pimpinan Utama", role: "Pengasuh Pesantren", bio: "Fokus dalam membimbing para santri dengan keteladanan dan keikhlasan." },
-  { name: "KH. Nama Pimpinan Kedua", role: "Dewan Pengawas", bio: "Berperan dalam memastikan kualitas pendidikan agama yang diajarkan." },
-  { name: "Ust. Nama Pimpinan Ketiga", role: "Ketua Diklat Pasaran", bio: "Bertanggung jawab atas jalannya program pengajian intensif." },
+  { name: "Syaikhuna Aang KH. Lili Syamsul Romli", role: "Pimpinan Umum", bio: "Fokus dalam membimbing para santri dengan keteladanan dan keikhlasan serta menjaga tradisi kitab kuning." },
+  { name: "Dewan Kiyai Al-Hasanah", role: "Dewan Pengawas", bio: "Berperan dalam memastikan kualitas pendidikan agama yang diajarkan sesuai dengan sanad yang otentik." },
+  { name: "Asatidz & Pengurus", role: "Pelaksana Program", bio: "Bertanggung jawab atas jalannya program pengajian intensif dan kesejahteraan para peserta diklat." },
 ]
 
 export default function Leadership() {

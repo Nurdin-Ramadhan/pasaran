@@ -131,6 +131,24 @@ export default function Hero() {
                 />
               </motion.div>
 
+              {/* Leadership Caption */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.8 }}
+                className="absolute -bottom-10 left-1/2 -translate-x-1/2 z-30 w-[90%] md:w-auto"
+              >
+                <div className="bg-white/80 backdrop-blur-xl border border-primary/20 p-6 rounded-[2.5rem] shadow-2xl text-center min-w-[320px]">
+                  <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-2">Pimpinan Umum</p>
+                  <h4 className="text-secondary font-black text-lg md:text-xl tracking-tighter leading-none mb-1">
+                    Syaikhuna Aang KH. Lili Syamsul Romli
+                  </h4>
+                  <p className="text-secondary/40 text-[10px] font-bold italic tracking-wide">
+                    Pondok Pesantren Al-Hasanah Cibeuti
+                  </p>
+                </div>
+              </motion.div>
+
               {/* Float decor / Micro-interactions */}
               <motion.div 
                 animate={{ 
