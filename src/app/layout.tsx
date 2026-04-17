@@ -14,8 +14,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pasaran Al-Hasanah",
-  description: "Platform Pendaftaran Diklat Pasaran Pondok Pesantren Al-Hasanah Cibeuti",
+  title: {
+    default: 'Pondok Pesantren Al-Hasanah Cibeuti',
+    template: '%s | Pondok Pesantren Al-Hasanah',
+  },
+  description: 'Pondok Pesantren Al-Hasanah Cibeuti — Lembaga pendidikan Islam klasik & modern yang berkhidmat untuk mencetak generasi beradab dan berilmu.',
+  openGraph: {
+    title: 'Pondok Pesantren Al-Hasanah Cibeuti',
+    description: 'Lembaga pendidikan Islam klasik & modern di Tasikmalaya.',
+    type: 'website',
+    locale: 'id_ID',
+    siteName: 'Pondok Pesantren Al-Hasanah',
+  },
 };
 
 export default function RootLayout({
