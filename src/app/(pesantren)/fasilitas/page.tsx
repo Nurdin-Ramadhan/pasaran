@@ -11,42 +11,22 @@ export const metadata = {
 const facilities = [
   { 
     name: "Masjid Utama", 
-    desc: "Pusat kegiatan ibadah dan kajian keislaman santri dengan arsitektur yang megah dan tenang.",
+    desc: "Pusat kegiatan ibadah, pengajian rutin, dan kegiatan spiritual utama seluruh santri.",
     image: "/pasaran.jpg" 
   },
   { 
-    name: "Asrama Nyaman", 
-    desc: "Hunian santri yang bersih dan teratur, didesain untuk mendukung istirahat dan kemandirian.",
+    name: "Asrama Santri", 
+    desc: "Hunian santri yang didesain untuk mendukung kedisiplinan, kemandirian, dan kebersamaan dalam menuntut ilmu.",
     image: "/pasaran.jpg" 
   },
   { 
-    name: "Ruang Kelas Modern", 
-    desc: "Sarana belajar mengajar yang representatif dan dilengkapi dengan media pembelajaran digital.",
+    name: "Ruang Kelas", 
+    desc: "Sarana belajar mengajar yang tenang dan khidmat untuk mendukung konsentrasi dalam kajian kitab kuning.",
     image: "/pasaran.jpg" 
   },
   { 
-    name: "Perpustakaan Digital", 
-    desc: "Koleksi ribuan kitab kuning otentik dan buku pengetahuan umum dalam format fisik dan digital.",
-    image: "/pasaran.jpg" 
-  },
-  { 
-    name: "Laboratorium Komputer", 
-    desc: "Fasilitas praktik teknologi informasi untuk membekali santri dengan keterampilan digital.",
-    image: "/pasaran.jpg" 
-  },
-  { 
-    name: "Kantin & Mart", 
-    desc: "Unit usaha pesantren yang menyediakan kebutuhan harian santri dengan sistem ekonomi syariah.",
-    image: "/pasaran.jpg" 
-  },
-  { 
-    name: "Sarana Olahraga", 
-    desc: "Lapangan serbaguna untuk menjaga kesehatan fisik santri melalui kegiatan olahraga rutin.",
-    image: "/pasaran.jpg" 
-  },
-  { 
-    name: "Area Pertanian", 
-    desc: "Lahan praktik kewirausahaan santri dalam bidang agribisnis dan kemandirian pangan.",
+    name: "Kantin Santri", 
+    desc: "Dikelola secara mandiri oleh santri sebagai sarana belajar berwirausaha dan memenuhi kebutuhan harian di lingkungan pesantren.",
     image: "/pasaran.jpg" 
   },
 ]
@@ -57,7 +37,7 @@ export default function FasilitasPage() {
       <Navbar />
       <PageHeader 
         title="Fasilitas & Sarana" 
-        subtitle="Menciptakan lingkungan belajar yang khidmat, nyaman, dan mendukung tumbuh kembang potensi santri."
+        subtitle="Sarana pendukung yang tersedia untuk menunjang kenyamanan dan kekhusyukan santri dalam menimba ilmu agama."
         breadcrumb={[{ label: "Fasilitas", href: "/fasilitas" }]}
       />
       

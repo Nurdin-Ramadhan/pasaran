@@ -1,6 +1,6 @@
 import Navbar from "@/components/landing/Navbar"
 import Hero from "@/components/landing/Hero"
-import StatistikSection from "@/components/pesantren/StatistikSection"
+import VisiMisiSection from "@/components/pesantren/VisiMisiSection"
 import AboutSection from "@/components/pesantren/AboutSection"
 import ProgramSection from "@/components/pesantren/ProgramSection"
 import Leadership from "@/components/landing/Leadership"
@@ -18,8 +18,8 @@ export default function Home() {
       {/* 1. Hero Section (Pertahankan Persis) */}
       <Hero />
       
-      {/* 2. Statistik Section (Baru) */}
-      <StatistikSection />
+      {/* 2. Visi Misi Section (Baru) */}
+      <VisiMisiSection />
       
       {/* 3. About Section (Baru - Ringkasan) */}
       <AboutSection />

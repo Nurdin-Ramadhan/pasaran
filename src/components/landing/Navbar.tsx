@@ -49,7 +49,7 @@ const menuItems = [
     children: [
       { label: "Kurikulum", href: "/program", desc: "Sistem pendidikan terpadu", icon: BookOpen },
       { label: "Kegiatan Harian", href: "/program", desc: "Aktivitas harian santri", icon: Activity },
-      { label: "Ekstrakulikuler", href: "/program", desc: "Pengembangan minat & bakat", icon: Trophy },
+      { label: "Kajian Kitab", href: "/program", desc: "Daftar kitab yang dikaji", icon: Trophy },
     ]
   },
   { 
@@ -119,7 +119,7 @@ export default function Navbar() {
                 AL-HASANAH
               </span>
               <span className="text-[8px] md:text-[10px] font-bold text-primary tracking-[0.3em] uppercase leading-tight">
-                Pesantren Modern
+                Pondok Pesantren Salaf
               </span>
             </div>
           </Link>

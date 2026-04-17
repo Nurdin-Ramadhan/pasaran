@@ -5,12 +5,10 @@ import Image from "next/image"
 import { Building2, Search } from "lucide-react"
 
 const facilities = [
-  { name: "Masjid Utama", image: "/pasaran.jpg" }, // TODO: Ganti gambar asli
+  { name: "Masjid Utama", image: "/pasaran.jpg" },
   { name: "Asrama Santri", image: "/pasaran.jpg" },
-  { name: "Ruang Belajar", image: "/pasaran.jpg" },
-  { name: "Perpustakaan", image: "/pasaran.jpg" },
-  { name: "Laboratorium Komputer", image: "/pasaran.jpg" },
-  { name: "Sarana Olahraga", image: "/pasaran.jpg" },
+  { name: "Ruang Kelas", image: "/pasaran.jpg" },
+  { name: "Kantin Santri", image: "/pasaran.jpg" },
 ]
 
 export default function FasilitasSection() {
@@ -35,7 +33,7 @@ export default function FasilitasSection() {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {facilities.map((fasi, index) => (
             <motion.div
               key={fasi.name}

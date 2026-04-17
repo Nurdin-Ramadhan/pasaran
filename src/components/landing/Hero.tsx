@@ -71,7 +71,7 @@ export default function Hero() {
             >
               <span className="inline-flex items-center gap-2 px-5 py-2 bg-primary/10 text-primary rounded-full text-xs font-black mb-6 border border-primary/20 tracking-[0.2em] uppercase backdrop-blur-sm">
                 <Sparkles className="w-3 h-3 animate-spin-slow" />
-                Pendaftaran Diklat Pasaran 1447 H
+                Website Resmi Pondok Pesantren
               </span>
               
               <h1 className="text-7xl md:text-9xl font-black text-foreground mb-4 leading-none tracking-tighter dark:neon-gold">
