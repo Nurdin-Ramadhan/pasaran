@@ -119,7 +119,7 @@ export default function Navbar() {
                 AL-HASANAH
               </span>
               <span className="text-[8px] md:text-[10px] font-bold text-primary tracking-[0.3em] uppercase leading-tight">
-                Pondok Pesantren Salaf
+                Media Al-Alhasanah
               </span>
             </div>
           </Link>
