@@ -1,12 +1,17 @@
 export interface BeritaItem {
-  id: string
+  id: number
+  created_at: string
+  updated_at: string
   judul: string
   slug: string
-  ringkasan: string
-  konten: string
-  gambar_url?: string
-  kategori: 'pengumuman' | 'kegiatan' | 'prestasi' | 'umum'
-  published_at: string
+  ringkasan: string | null
+  konten: string | null
+  kategori: string
+  status: 'DRAFT' | 'PUBLISHED'
+  thumbnail_url: string | null
+  penulis_id: string | null
+  is_featured: boolean
+  tanggal_publish: string
 }
 
 export interface ProgramItem {

@@ -119,7 +119,7 @@ export default function Navbar() {
                 AL-HASANAH
               </span>
               <span className="text-[8px] md:text-[10px] font-bold text-primary tracking-[0.3em] uppercase leading-tight">
-                Media Al-Alhasanah
+                Media Al-hasanah
               </span>
             </div>
           </Link>
@@ -217,7 +217,13 @@ export default function Navbar() {
               className="p-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/20"
               aria-label="Toggle Theme"
             >
-              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {!mounted ? (
+                <div className="w-5 h-5" />
+              ) : theme === "dark" ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
             </button>
 
             <button 
