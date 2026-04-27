@@ -33,6 +33,24 @@ const steps = [
   { id: 3, title: "Kitab", icon: ShoppingBag },
 ]
 
+const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, '0'))
+const months = [
+  { value: "01", label: "Januari" },
+  { value: "02", label: "Februari" },
+  { value: "03", label: "Maret" },
+  { value: "04", label: "April" },
+  { value: "05", label: "Mei" },
+  { value: "06", label: "Juni" },
+  { value: "07", label: "Juli" },
+  { value: "08", label: "Agustus" },
+  { value: "09", label: "September" },
+  { value: "10", label: "Oktober" },
+  { value: "11", label: "November" },
+  { value: "12", label: "Desember" },
+]
+const currentYearValue = new Date().getFullYear()
+const years = Array.from({ length: 80 }, (_, i) => (currentYearValue - i).toString())
+
 export default function RegistrationForm() {
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -44,6 +62,11 @@ export default function RegistrationForm() {
   const [masterKitab, setMasterKitab] = useState<Kitab[]>([])
   const [selectedKitabIds, setSelectedKitabIds] = useState<number[]>([])
   const [config, setConfig] = useState<any>(null)
+
+  // Custom Date Picker State
+  const [dobDay, setDobDay] = useState("")
+  const [dobMonth, setDobMonth] = useState("")
+  const [dobYear, setDobYear] = useState("")
 
   const form = useForm<RegistrationValues>({
     resolver: zodResolver(registrationSchema),
@@ -57,7 +80,7 @@ export default function RegistrationForm() {
       alamat_lengkap: "",
       no_telepon: "",
       pesantren_asal: "",
-      jenis_diklat: "RAMADHAN",
+      jenis_diklat: "DZULHIJJAH",
       tahun_diklat: 1447,
       periode: 1, // Add default value for periode
       biaya_pendaftaran: 0,
@@ -95,6 +118,12 @@ export default function RegistrationForm() {
     }
     loadInitialData()
   }, [setValue])
+
+  useEffect(() => {
+    if (dobDay && dobMonth && dobYear) {
+      form.setValue("tanggal_lahir", `${dobYear}-${dobMonth}-${dobDay}`, { shouldValidate: true })
+    }
+  }, [dobDay, dobMonth, dobYear, form])
 
   const filteredKitab = masterKitab.filter(k => k.jenis_diklat === currentJenisDiklat)
 
@@ -244,8 +273,45 @@ export default function RegistrationForm() {
                       <FormField control={form.control} name="tempat_lahir" render={({ field }) => (
                         <FormItem><FormLabel className="text-[10px] font-black uppercase tracking-widest text-secondary/40">Tempat Lahir</FormLabel><FormControl><Input placeholder="Kota/Kabupaten" {...field} className="rounded-2xl border-secondary/10 h-14 bg-secondary/5 focus:bg-white transition-all font-bold" /></FormControl><FormMessage /></FormItem>
                       )} />
-                      <FormField control={form.control} name="tanggal_lahir" render={({ field }) => (
-                        <FormItem><FormLabel className="text-[10px] font-black uppercase tracking-widest text-secondary/40">Tanggal Lahir</FormLabel><FormControl><Input type="date" {...field} className="rounded-2xl border-secondary/10 h-14 bg-secondary/5 focus:bg-white transition-all font-bold" /></FormControl><FormMessage /></FormItem>
+                      <FormField control={form.control} name="tanggal_lahir" render={() => (
+                        <FormItem>
+                          <FormLabel className="text-[10px] font-black uppercase tracking-widest text-secondary/40">Tanggal Lahir</FormLabel>
+                          <div className="grid grid-cols-3 gap-2">
+                            <Select onValueChange={(val) => setDobDay(val || "")} value={dobDay}>
+                              <FormControl>
+                                <SelectTrigger className="rounded-2xl border-secondary/10 h-14 bg-secondary/5 focus:bg-white transition-all font-bold">
+                                  <SelectValue placeholder="Tgl" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent className="max-h-[300px]">
+                                {days.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                              </SelectContent>
+                            </Select>
+
+                            <Select onValueChange={(val) => setDobMonth(val || "")} value={dobMonth}>
+                              <FormControl>
+                                <SelectTrigger className="rounded-2xl border-secondary/10 h-14 bg-secondary/5 focus:bg-white transition-all font-bold">
+                                  <SelectValue placeholder="Bln" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent className="max-h-[300px]">
+                                {months.map(m => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}
+                              </SelectContent>
+                            </Select>
+
+                            <Select onValueChange={(val) => setDobYear(val || "")} value={dobYear}>
+                              <FormControl>
+                                <SelectTrigger className="rounded-2xl border-secondary/10 h-14 bg-secondary/5 focus:bg-white transition-all font-bold">
+                                  <SelectValue placeholder="Thn" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent className="max-h-[300px]">
+                                {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
                       )} />
                     </div>
 
@@ -281,14 +347,14 @@ export default function RegistrationForm() {
                       <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary"><BookOpen className="w-6 h-6" /></div>
                       <div>
                         <h3 className="text-2xl font-black text-secondary tracking-tight">Program Diklat</h3>
-                        <p className="text-secondary/40 text-sm font-medium italic">Pilih gelombang pengajian yang akan diikuti</p>
+                        <p className="text-secondary/40 text-sm font-medium italic">INFORMASI ADMINISTRASI PROGRAM DIKLAT PASARAN</p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <FormField control={form.control} name="jenis_diklat" render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[10px] font-black uppercase tracking-widest text-secondary/40">Pilih Gelombang</FormLabel>
+                          <FormLabel className="text-[10px] font-black uppercase tracking-widest text-secondary/40">PROGRAM DIKLAT YANG AKAN DILAKSANAKAN</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger className="rounded-2xl border-secondary/10 h-14 bg-secondary/5 focus:bg-white transition-all font-bold text-secondary">
@@ -296,9 +362,9 @@ export default function RegistrationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className="rounded-2xl">
-                              <SelectItem value="MAULID" className="font-bold py-3 uppercase tracking-widest">PASARAN MAULID</SelectItem>
-                              <SelectItem value="SYABAN" className="font-bold py-3 uppercase tracking-widest">PASARAN SYABAN</SelectItem>
-                              <SelectItem value="RAMADHAN" className="font-bold py-3 uppercase tracking-widest">PASARAN RAMADHAN</SelectItem>
+                              {/* <SelectItem value="MAULID" className="font-bold py-3 uppercase tracking-widest">PASARAN MAULID</SelectItem> */}
+                              {/* <SelectItem value="SYABAN" className="font-bold py-3 uppercase tracking-widest">PASARAN SYABAN</SelectItem> */}
+                              {/* <SelectItem value="RAMADHAN" className="font-bold py-3 uppercase tracking-widest">PASARAN RAMADHAN</SelectItem> */}
                               <SelectItem value="DZULHIJJAH" className="font-bold py-3 uppercase tracking-widest">PASARAN DZULHIJJAH</SelectItem>
                             </SelectContent>
                           </Select>
@@ -335,7 +401,7 @@ export default function RegistrationForm() {
                        {[
                          { icon: MapPin, text: "Lokasi: Pesantren Al-Hasanah" },
                          { icon: Phone, text: "WA: +62 8xx-xxxx-xxxx" },
-                         { icon: GraduationCap, text: "Metode: Kitab Kuning" }
+                         { icon: GraduationCap, text: "Metode: Lugot & Surah" }
                        ].map((feat, i) => (
                          <div key={i} className="flex items-center gap-3 p-4 bg-secondary/5 rounded-2xl border border-secondary/5">
                             <feat.icon className="w-4 h-4 text-secondary/30" />

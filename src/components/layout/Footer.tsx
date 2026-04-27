@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="bg-card border-t border-primary/10 pt-20 pb-10">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Column 1: Logo & Description */}
+          {/* Colm 1: Logo */}
           <div className="flex flex-col gap-6">
             <Link href="/" className="flex items-center gap-3">
               <Image src="/logo.png" alt="Logo" width={50} height={50} className="drop-shadow-lg" />
