@@ -24,7 +24,7 @@ export default function VisiMisiSection() {
             </div>
             <h3 className="text-3xl font-black text-white mb-6 uppercase tracking-widest italic">Visi</h3>
             <p className="text-white/70 text-lg leading-relaxed font-medium italic">
-              "Terwujudnya generasi yang bertaqwa, berakhlakul karimah, dan mumpuni dalam ilmu agama (Tafaqquh Fiddin) demi kejayaan umat dan bangsa."
+              &ldquo;Terwujudnya generasi yang bertaqwa, berakhlakul karimah, dan mumpuni dalam ilmu agama (Tafaqquh Fiddin) demi kejayaan umat dan bangsa.&rdquo;
             </p>
           </motion.div>
 

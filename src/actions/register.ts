@@ -4,6 +4,8 @@ import { createClient } from "@/utils/supabase/server"
 import { registrationSchema, RegistrationValues } from "@/lib/validations/registration"
 import { randomUUID } from "crypto"
 
+const participantInsertSchema = registrationSchema.omit({ periode: true })
+
 export async function registerParticipant(data: RegistrationValues) {
   const supabase = await createClient()
 
@@ -16,8 +18,7 @@ export async function registerParticipant(data: RegistrationValues) {
   // Generate unique UUID for QR Code using built-in crypto
   const qr_code_id = randomUUID()
 
-  // Remove fields that don't exist in 'peserta_diklat' table if needed
-  const { periode, ...insertData } = validation.data
+  const insertData = participantInsertSchema.parse(validation.data)
 
   const { error } = await supabase.from("peserta_diklat").insert({
     ...insertData,

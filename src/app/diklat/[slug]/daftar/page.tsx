@@ -10,7 +10,7 @@ export default async function DiklatDaftarPage({
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-slate-50/50">
+    <main className="min-h-screen bg-background">
       <Navbar />
       
       {/* Background Decor */}
@@ -21,16 +21,16 @@ export default async function DiklatDaftarPage({
 
       <div className="container mx-auto pt-48 pb-24 relative z-10">
         <div className="text-center mb-16 px-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-secondary mb-4 uppercase tracking-tighter">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4 uppercase tracking-tighter">
             Pendaftaran <span className="text-primary italic">Diklat {slug.replace(/-/g, ' ')}</span>
           </h1>
-          <p className="text-secondary/60 text-lg max-w-2xl mx-auto leading-relaxed font-medium">
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed font-medium">
             Silakan lengkapi formulir di bawah ini untuk mendaftar pada program diklat pilihan Anda. 
             Pastikan data yang dimasukkan valid dan dapat dipertanggungjawabkan.
           </p>
         </div>
         
-        <div className="max-w-4xl mx-auto bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl border border-primary/5">
+        <div className="max-w-4xl mx-auto bg-card rounded-[3rem] p-8 md:p-12 shadow-2xl border border-border">
           <RegistrationForm />
         </div>
       </div>

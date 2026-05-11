@@ -79,7 +79,7 @@ export default function Hero() {
               </h1>
               
               <p className="text-xl md:text-3xl font-serif italic text-primary/80 mb-10 max-w-2xl leading-relaxed">
-                "Menyemai Ilmu, Meraih Keberkahan di Pesantren"
+                &ldquo;Menyemai Ilmu, Meraih Keberkahan di Pesantren&rdquo;
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center">

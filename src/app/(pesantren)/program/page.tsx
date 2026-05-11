@@ -79,7 +79,7 @@ export default function ProgramPage() {
       
       <main className="container mx-auto px-6 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {fanKitabs.map((item, i) => (
+          {fanKitabs.map((item) => (
             <div 
               key={item.fan}
               className="bg-card border border-primary/5 p-10 rounded-[3rem] shadow-xl hover:shadow-2xl hover:border-primary/20 transition-all group flex flex-col"

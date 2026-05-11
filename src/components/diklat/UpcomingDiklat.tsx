@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { BookOpen, Calendar, MapPin, User, Info } from "lucide-react"
+import { Calendar, User, Info } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
@@ -20,7 +20,7 @@ export default function UpcomingDiklat() {
         <div className="text-center mb-16">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 px-4 py-1.5 text-sm font-bold uppercase tracking-widest">Periode Ke-148</Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-secondary mb-6 leading-tight">
-            MA'LUMAT <span className="text-primary italic font-serif">DZULHIJJAH 1447 H</span>
+            MA&apos;LUMAT <span className="text-primary italic font-serif">DZULHIJJAH 1447 H</span>
           </h2>
           <p className="text-secondary/70 max-w-3xl mx-auto leading-relaxed text-lg">
             In Syaa Allah di Pondok Pesantren Al-Hasanah Cibeuti akan dilaksanakan Pengajian Diklat (PASARAN/KILATAN) dengan kajian kitab-kitab sebagai berikut:
@@ -74,7 +74,7 @@ export default function UpcomingDiklat() {
                     <User className="w-7 h-7 text-primary" />
                   </div>
                   <div>
-                    <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Mu'allim (Guru)</p>
+                    <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Mu&apos;allim (Guru)</p>
                     <p className="text-xl font-bold">Syaikhuna Aang KH. Lili Syamsul Romli</p>
                   </div>
                 </div>

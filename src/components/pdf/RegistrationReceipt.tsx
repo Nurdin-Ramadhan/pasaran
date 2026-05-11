@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet, Image, Font } from "@react-pdf/renderer"
+import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer"
 import { RegistrationValues } from "@/lib/validations/registration"
 
 // Registrasi Font (Opsional jika ingin lebih premium, namun Helvetica adalah safe default)
@@ -329,6 +329,7 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
         
         {/* Header Institution */}
         <View style={styles.headerContainer}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image src={logoPath} style={styles.logo} />
           <View style={styles.headerInfo}>
             <Text style={styles.orgTitle}>PONDOK PESANTREN AL-HASANAH</Text>
@@ -463,6 +464,7 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
         {/* Footer: QR & Verification */}
         <View style={styles.footerSection}>
           <View style={styles.qrWrapper}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image src={qrCodeDataUrl} style={styles.qrImg} />
             <View style={styles.qrInfo}>
               <Text style={styles.qrTitle}>VERIFIKASI DIGITAL</Text>

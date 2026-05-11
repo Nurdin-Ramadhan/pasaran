@@ -40,7 +40,7 @@ export default async function BeritaPage() {
       <main className="container mx-auto px-6 py-20">
         {newsList.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {newsList.map((item, i) => (
+            {newsList.map((item) => (
               <article 
                 key={item.id}
                 className="bg-card rounded-[3rem] overflow-hidden shadow-xl border border-primary/5 flex flex-col group"

@@ -41,7 +41,7 @@ export default async function BeritaSection() {
 
         {newsList.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {newsList.map((item, index) => (
+            {newsList.map((item) => (
               <article
                 key={item.id}
                 className="bg-card rounded-[2.5rem] overflow-hidden shadow-xl border border-primary/5 flex flex-col group"

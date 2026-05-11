@@ -1,15 +1,7 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { motion, useInView, useSpring, useTransform } from "framer-motion"
-import { cn } from "@/lib/utils"
-
-interface StatItemProps {
-  label: string
-  value: number
-  suffix?: string
-  index: number
-}
 
 function Counter({ value, suffix }: { value: number; suffix?: string }) {
   const ref = useRef(null)

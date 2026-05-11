@@ -6,6 +6,7 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Calendar, Tag, User } from "lucide-react"
 import { BeritaItem } from "@/types/pesantren"
+import { sanitizeNewsContent } from "@/lib/sanitize-html"
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -42,6 +43,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
   }
 
   const item = news as BeritaItem
+  const sanitizedContent = sanitizeNewsContent(item.konten || "")
 
   return (
     <>
@@ -91,7 +93,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
           {/* Content */}
           <div 
             className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-p:text-muted-foreground prose-p:font-medium prose-p:leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: item.konten || "" }}
+            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
           />
         </div>
       </main>

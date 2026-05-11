@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
-import Link from "next/image"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
 
 export default function AboutSection() {
@@ -59,7 +58,7 @@ export default function AboutSection() {
               Membentuk Generasi <span className="text-primary italic">Beradab & Berilmu</span>
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed mb-8 font-medium">
-              Pondok Pesantren Al-Hasanah Cibeuti adalah lembaga pendidikan Islam klasik yang berfokus pada pelestarian tradisi kitab kuning dengan integrasi nilai-nilai modern. Kami berkomitmen mencetak santri yang berafiliasi kuat pada Al-Qur'an dan As-Sunnah.
+              Pondok Pesantren Al-Hasanah Cibeuti adalah lembaga pendidikan Islam klasik yang berfokus pada pelestarian tradisi kitab kuning dengan integrasi nilai-nilai modern. Kami berkomitmen mencetak santri yang berafiliasi kuat pada Al-Qur&apos;an dan As-Sunnah.
             </p>
 
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">

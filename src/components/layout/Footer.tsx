@@ -18,7 +18,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-muted-foreground leading-relaxed">
-              Membentuk generasi Qur'ani yang berilmu amaliyah dan beramal ilmiyah. 
+              Membentuk generasi Qur&apos;ani yang berilmu amaliyah dan beramal ilmiyah. 
               Pondok Pesantren Al-Hasanah Cibeuti berdedikasi tinggi dalam pendidikan Islam klasik dan modern.
             </p>
             <div className="flex gap-4">

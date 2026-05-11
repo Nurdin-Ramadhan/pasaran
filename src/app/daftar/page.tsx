@@ -3,7 +3,7 @@ import Navbar from "@/components/landing/Navbar"
 
 export default function DaftarPage() {
   return (
-    <main className="min-h-screen bg-slate-50/50">
+    <main className="min-h-screen bg-background">
       <Navbar />
       
       {/* Background Decor */}
@@ -14,8 +14,8 @@ export default function DaftarPage() {
 
       <div className="container mx-auto pt-32 pb-24 relative z-10">
         <div className="text-center mb-16 px-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-secondary mb-4">Mulai Perjalanan <span className="text-primary italic">Ilmiah Anda</span></h1>
-          <p className="text-secondary/60 text-lg max-w-2xl mx-auto leading-relaxed font-medium">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">Mulai Perjalanan <span className="text-primary italic">Ilmiah Anda</span></h1>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed font-medium">
             Silakan lengkapi formulir di bawah ini. Pastikan nomor WhatsApp yang Anda masukkan aktif untuk keperluan koordinasi.
           </p>
         </div>
@@ -23,9 +23,9 @@ export default function DaftarPage() {
         <RegistrationForm />
       </div>
 
-      <footer className="py-12 bg-white border-t border-secondary/10 relative z-10">
+      <footer className="py-12 bg-card border-t border-border relative z-10">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-secondary/50 font-medium">
+          <p className="text-muted-foreground font-medium">
             © {new Date().getFullYear()} Pesantren Pasaran. Seluruh Hak Cipta Dilindungi.
           </p>
         </div>

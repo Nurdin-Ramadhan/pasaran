@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Book, Languages, Quote, Brain, Compass, Scale, History, ScrollText, GraduationCap } from "lucide-react"
+import { Languages, Quote, Brain, Compass, Scale, History, ScrollText, GraduationCap } from "lucide-react"
 
 const fanKitabs = [
   {

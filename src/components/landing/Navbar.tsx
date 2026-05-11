@@ -21,13 +21,9 @@ import {
   Calendar, 
   Archive, 
   UserPlus,
-  ArrowRight,
-  Globe,
-  MessageSquare,
-  Building2,
-  Newspaper
+  ArrowRight
 } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useTheme } from "@/components/ThemeProvider"
 import { cn } from "@/lib/utils"
 
 // Menu Structure
@@ -70,26 +66,17 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [mounted, setMounted] = useState(false)
   
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
-    setMounted(true)
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false)
-  }, [pathname])
-
-  if (!mounted) return null
 
   return (
     <>
@@ -217,9 +204,7 @@ export default function Navbar() {
               className="p-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/20"
               aria-label="Toggle Theme"
             >
-              {!mounted ? (
-                <div className="w-5 h-5" />
-              ) : theme === "dark" ? (
+              {theme === "dark" ? (
                 <Sun className="w-5 h-5" />
               ) : (
                 <Moon className="w-5 h-5" />
@@ -280,6 +265,7 @@ export default function Navbar() {
                             <Link 
                               key={child.label}
                               href={child.href}
+                              onClick={() => setMobileMenuOpen(false)}
                               className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all"
                             >
                               <div className="p-2 bg-primary/10 text-primary rounded-lg">
@@ -293,6 +279,7 @@ export default function Navbar() {
                     ) : (
                       <Link 
                         href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
                         className={cn(
                           "block px-4 py-3 rounded-xl font-bold transition-all",
                           pathname === item.href 
@@ -310,6 +297,7 @@ export default function Navbar() {
               <div className="p-6 border-t border-primary/10">
                 <Link 
                   href="/daftar" 
+                  onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center justify-center gap-3 bg-secondary text-secondary-foreground w-full py-4 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl"
                 >
                   Daftar Santri

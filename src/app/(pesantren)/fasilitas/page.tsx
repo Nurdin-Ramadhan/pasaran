@@ -43,7 +43,7 @@ export default function FasilitasPage() {
       
       <main className="container mx-auto px-6 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {facilities.map((fasi, i) => (
+          {facilities.map((fasi) => (
             <div 
               key={fasi.name}
               className="group bg-card rounded-[3rem] overflow-hidden border border-primary/5 shadow-xl hover:shadow-2xl transition-all"
