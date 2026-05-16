@@ -140,6 +140,7 @@ export default function UpcomingDiklat({ config, programs }: UpcomingDiklatProps
             <p className="text-white/80 mb-8 leading-relaxed">Segera daftarkan diri Anda untuk mengamankan kuota pengajian.</p>
             <Button
               render={<Link href={`/diklat/${featuredProgram.slug}/daftar`} />}
+              nativeButton={false}
               className="w-full bg-secondary hover:bg-white hover:text-secondary text-white px-8 py-5 rounded-2xl font-extrabold transition-all shadow-xl h-auto"
             >
               <BookOpen className="mr-2 w-5 h-5" />

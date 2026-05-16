@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { FieldPath, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { registrationSchema, RegistrationValues } from "@/lib/validations/registration"
@@ -72,12 +72,32 @@ const sectionTitleClass = "text-2xl font-black text-foreground tracking-tight"
 const sectionSubtitleClass = "text-muted-foreground text-sm font-medium italic"
 
 const jenisDiklatOptions: RegistrationValues["jenis_diklat"][] = ["MAULID", "SYABAN", "RAMADHAN", "DZULHIJJAH"]
+const defaultDzulhijjahKitabNames = [
+  "Maqulat Mama Syuja'i",
+  "Maqulat Mama Syatibi",
+  "Tuhfatul Mustaq",
+  "Wad'ul Kalimah",
+]
+
 const toNumber = (value: number | string | null | undefined) => {
   const numberValue = Number(value)
   return Number.isFinite(numberValue) ? numberValue : 0
 }
 
+const normalizeKitabName = (name: string) => name.trim().toLowerCase()
+
+const getDefaultDzulhijjahKitabIds = (kitabList: Kitab[]) => {
+  const defaultNames = new Set(defaultDzulhijjahKitabNames.map(normalizeKitabName))
+
+  return kitabList
+    .filter((kitab) => kitab.jenis_diklat === "DZULHIJJAH" && defaultNames.has(normalizeKitabName(kitab.nama_kitab)))
+    .map((kitab) => kitab.id)
+}
+
 export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: RegistrationFormProps) {
+  const formTopRef = useRef<HTMLDivElement>(null)
+  const hasMountedStepRef = useRef(false)
+  const defaultDzulhijjahKitabAppliedRef = useRef(false)
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successId, setSuccessId] = useState<string | null>(null)
@@ -126,6 +146,19 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
   const belanjaKitabNominal = useWatch({ control: form.control, name: "belanja_kitab_nominal" })
 
   useEffect(() => {
+    if (!hasMountedStepRef.current) {
+      hasMountedStepRef.current = true
+      return
+    }
+
+    const formTop = formTopRef.current
+    if (!formTop) return
+
+    const y = formTop.getBoundingClientRect().top + window.scrollY - 120
+    window.scrollTo({ top: Math.max(y, 0), behavior: "smooth" })
+  }, [step])
+
+  useEffect(() => {
     async function loadInitialData() {
       const supabase = createClient()
       const { data: configData } = await supabase.from('config_diklat').select('*').eq('is_active', true).single()
@@ -149,17 +182,24 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
 
       const { data: kitabData } = await supabase.from('master_kitab').select('*').eq('is_active', true)
       if (kitabData) {
-        setMasterKitab(
-          kitabData.map((kitab) => ({
-            ...kitab,
-            harga: toNumber(kitab.harga),
-          }))
-        )
+        const normalizedKitab = kitabData.map((kitab) => ({
+          ...kitab,
+          harga: toNumber(kitab.harga),
+        }))
+        setMasterKitab(normalizedKitab)
+
+        if (initialJenisDiklat === "DZULHIJJAH") {
+          const defaultIds = getDefaultDzulhijjahKitabIds(normalizedKitab)
+          if (defaultIds.length > 0) {
+            setSelectedKitabIds(defaultIds)
+            defaultDzulhijjahKitabAppliedRef.current = true
+          }
+        }
       }
       setIsLoading(false)
     }
     loadInitialData()
-  }, [setValue])
+  }, [initialJenisDiklat, setValue])
 
   useEffect(() => {
     if (dobDay && dobMonth && dobYear) {
@@ -185,7 +225,13 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     if (!value) return
 
     setValue("jenis_diklat", value, { shouldDirty: true, shouldValidate: true })
-    setSelectedKitabIds([])
+    if (value === "DZULHIJJAH") {
+      setSelectedKitabIds(getDefaultDzulhijjahKitabIds(masterKitab))
+      defaultDzulhijjahKitabAppliedRef.current = true
+    } else {
+      setSelectedKitabIds([])
+      defaultDzulhijjahKitabAppliedRef.current = false
+    }
   }
 
   const nextStep = async (e: React.MouseEvent) => {
@@ -250,7 +296,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div ref={formTopRef} className="max-w-4xl mx-auto py-8 px-4">
       {/* Step Progress Bar */}
       <div className="flex justify-between items-center mb-12 relative px-4 md:px-20">
         <div className="absolute top-1/2 left-0 w-full h-0.5 bg-border -translate-y-1/2 z-0" />

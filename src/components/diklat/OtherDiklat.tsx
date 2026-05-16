@@ -46,6 +46,7 @@ export default function OtherDiklat({ programs }: OtherDiklatProps) {
                   </Badge>
                   <Button
                     render={<Link href={`/diklat/${prog.slug}/daftar`} />}
+                    nativeButton={false}
                     variant="secondary"
                     className="rounded-2xl h-10 px-5 font-black"
                   >
