@@ -1,5 +1,6 @@
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer"
 import { RegistrationValues } from "@/lib/validations/registration"
+import { CONTACT_TEXT, SITE_URL } from "@/lib/site"
 
 // Registrasi Font (Opsional jika ingin lebih premium, namun Helvetica adalah safe default)
 // Kita gunakan styling yang kuat pada Helvetica untuk hasil profesional
@@ -335,7 +336,7 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
             <Text style={styles.orgTitle}>PONDOK PESANTREN AL-HASANAH</Text>
             <Text style={styles.orgSubtitle}>Kp. Cibeuti RT.01 RW.01 Kel. Cibeuti Kec. Kawalu Kota Tasikmalaya</Text>
             <Text style={styles.orgContact}>
-              Jawa Barat 46182 | WhatsApp: +62 8xx-xxxx-xxxx | Website: alhasanah.org
+              Jawa Barat 46182 | WhatsApp: {CONTACT_TEXT} | Website: {SITE_URL}
             </Text>
           </View>
         </View>
@@ -469,7 +470,7 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
             <View style={styles.qrInfo}>
               <Text style={styles.qrTitle}>VERIFIKASI DIGITAL</Text>
               <Text style={styles.qrText}>
-                QR-Code ini bisa digunakan untuk memverifikasi data pendaftaran pada database pusat Al-Hasanah.
+                QR-Code ini bisa digunakan untuk memverifikasi data pendaftaran melalui {SITE_URL}.
               </Text>
               <Text style={{fontSize: 6, color: '#B2BEC3', marginTop: 4}}>VERIFIED ID: {qrCodeId}</Text>
             </View>
@@ -483,7 +484,7 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
         </View>
 
         <Text style={styles.pageNumber}>
-          Dokumen Sah diterbitkan oleh Sistem Informasi Al-Hasanah | {printDate}
+          Dokumen Sah diterbitkan oleh {SITE_URL} | {printDate}
         </Text>
       </Page>
     </Document>

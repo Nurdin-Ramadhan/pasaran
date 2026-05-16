@@ -20,6 +20,8 @@ import { createClient } from "@/utils/supabase/client"
 import Image from "next/image"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { DIKLAT_LABELS } from "@/lib/diklat-shared"
+import { CONTACT_TEXT } from "@/lib/site"
 
 interface Kitab {
   id: number;
@@ -35,6 +37,10 @@ interface DiklatConfig {
   biaya_listrik: number | string;
   kos_makan: number | string;
   tafaruqon: number | string;
+}
+
+type RegistrationFormProps = {
+  initialJenisDiklat?: RegistrationValues["jenis_diklat"]
 }
 
 const steps = [
@@ -65,7 +71,13 @@ const fieldInputClass = "rounded-2xl border-border h-14 bg-muted/50 focus-visibl
 const sectionTitleClass = "text-2xl font-black text-foreground tracking-tight"
 const sectionSubtitleClass = "text-muted-foreground text-sm font-medium italic"
 
-export default function RegistrationForm() {
+const jenisDiklatOptions: RegistrationValues["jenis_diklat"][] = ["MAULID", "SYABAN", "RAMADHAN", "DZULHIJJAH"]
+const toNumber = (value: number | string | null | undefined) => {
+  const numberValue = Number(value)
+  return Number.isFinite(numberValue) ? numberValue : 0
+}
+
+export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: RegistrationFormProps) {
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successId, setSuccessId] = useState<string | null>(null)
@@ -94,7 +106,7 @@ export default function RegistrationForm() {
       alamat_lengkap: "",
       no_telepon: "",
       pesantren_asal: "",
-      jenis_diklat: "DZULHIJJAH",
+      jenis_diklat: initialJenisDiklat,
       tahun_diklat: 1447,
       periode: 1, // Add default value for periode
       biaya_pendaftaran: 0,
@@ -120,18 +132,30 @@ export default function RegistrationForm() {
       
       if (configData) {
         const activeConfig = configData as DiklatConfig
+        const uangMiftah = toNumber(activeConfig.uang_miftah)
+        const biayaListrik = toNumber(activeConfig.biaya_listrik)
+        const kosMakan = toNumber(activeConfig.kos_makan)
+        const tafaruqon = toNumber(activeConfig.tafaruqon)
+
         setConfig(activeConfig)
         setValue("tahun_diklat", activeConfig.tahun_hijriah)
-        setValue("periode", activeConfig.periode || 1)
-        setValue("uang_miftah", Number(activeConfig.uang_miftah))
-        setValue("biaya_listrik", Number(activeConfig.biaya_listrik))
-        setValue("kos_makan", Number(activeConfig.kos_makan))
-        setValue("tafaruqon", Number(activeConfig.tafaruqon))
-        setValue("biaya_pendaftaran", Number(activeConfig.uang_miftah) + Number(activeConfig.biaya_listrik) + Number(activeConfig.kos_makan) + Number(activeConfig.tafaruqon))
+        setValue("periode", toNumber(activeConfig.periode) || 1)
+        setValue("uang_miftah", uangMiftah)
+        setValue("biaya_listrik", biayaListrik)
+        setValue("kos_makan", kosMakan)
+        setValue("tafaruqon", tafaruqon)
+        setValue("biaya_pendaftaran", uangMiftah + biayaListrik + kosMakan + tafaruqon)
       }
 
       const { data: kitabData } = await supabase.from('master_kitab').select('*').eq('is_active', true)
-      if (kitabData) setMasterKitab(kitabData)
+      if (kitabData) {
+        setMasterKitab(
+          kitabData.map((kitab) => ({
+            ...kitab,
+            harga: toNumber(kitab.harga),
+          }))
+        )
+      }
       setIsLoading(false)
     }
     loadInitialData()
@@ -383,10 +407,11 @@ export default function RegistrationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className="rounded-2xl">
-                              {/* <SelectItem value="MAULID" className="font-bold py-3 uppercase tracking-widest">PASARAN MAULID</SelectItem> */}
-                              {/* <SelectItem value="SYABAN" className="font-bold py-3 uppercase tracking-widest">PASARAN SYABAN</SelectItem> */}
-                              {/* <SelectItem value="RAMADHAN" className="font-bold py-3 uppercase tracking-widest">PASARAN RAMADHAN</SelectItem> */}
-                              <SelectItem value="DZULHIJJAH" className="font-bold py-3 uppercase tracking-widest">PASARAN DZULHIJJAH</SelectItem>
+                              {jenisDiklatOptions.map((jenis) => (
+                                <SelectItem key={jenis} value={jenis} className="font-bold py-3 uppercase tracking-widest">
+                                  PASARAN {DIKLAT_LABELS[jenis].toUpperCase()}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -407,12 +432,12 @@ export default function RegistrationForm() {
                           ].map((item) => (
                             <li key={item.label} className="flex justify-between items-center text-muted-foreground text-sm">
                               <span className="font-bold">{item.label}</span>
-                              <span className="font-mono font-black text-foreground">Rp {item.val?.toLocaleString()}</span>
+                              <span className="font-mono font-black text-foreground">Rp {toNumber(item.val).toLocaleString("id-ID")}</span>
                             </li>
                           ))}
                           <li className="pt-3 border-t-2 border-primary/10 flex justify-between items-center">
                             <span className="font-black text-foreground uppercase tracking-widest text-[10px]">Total Wajib</span>
-                            <span className="font-mono font-black text-primary text-lg">Rp {biayaPendaftaran.toLocaleString()}</span>
+                            <span className="font-mono font-black text-primary text-lg">Rp {biayaPendaftaran.toLocaleString("id-ID")}</span>
                           </li>
                         </ul>
                       </div>
@@ -421,7 +446,7 @@ export default function RegistrationForm() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                        {[
                          { icon: MapPin, text: "Lokasi: Pesantren Al-Hasanah" },
-                         { icon: Phone, text: "WA: +62 8xx-xxxx-xxxx" },
+                         { icon: Phone, text: `WA: ${CONTACT_TEXT}` },
                          { icon: GraduationCap, text: "Metode: Lugot & Surah" }
                        ].map((feat, i) => (
                          <div key={i} className="flex items-center gap-3 p-4 bg-muted/50 rounded-2xl border border-border">
@@ -468,7 +493,7 @@ export default function RegistrationForm() {
                             </div>
                             <div>
                               <p className={`text-sm font-black tracking-tight ${selectedKitabIds.includes(kitab.id) ? 'text-foreground' : 'text-muted-foreground'}`}>{kitab.nama_kitab}</p>
-                              <p className="text-xs font-mono font-black text-primary mt-1">Rp {kitab.harga.toLocaleString()}</p>
+                              <p className="text-xs font-mono font-black text-primary mt-1">Rp {kitab.harga.toLocaleString("id-ID")}</p>
                             </div>
                           </div>
                         </div>
@@ -484,8 +509,8 @@ export default function RegistrationForm() {
                                 <h4 className="text-2xl font-black tracking-tighter">Total Infaq & Kitab</h4>
                              </div>
                              <div className="text-right">
-                                <p className="text-secondary-foreground/50 font-mono text-sm line-through decoration-primary decoration-2">Rp {biayaPendaftaran.toLocaleString()}</p>
-                                <p className="text-4xl font-black text-secondary-foreground tracking-tighter">Rp {(biayaPendaftaran + belanjaKitabNominal).toLocaleString()}</p>
+                                <p className="text-secondary-foreground/50 font-mono text-sm line-through decoration-primary decoration-2">Rp {biayaPendaftaran.toLocaleString("id-ID")}</p>
+                                <p className="text-4xl font-black text-secondary-foreground tracking-tighter">Rp {(biayaPendaftaran + belanjaKitabNominal).toLocaleString("id-ID")}</p>
                              </div>
                           </div>
                           <div className="flex items-start gap-3 p-4 bg-secondary-foreground/5 rounded-2xl border border-secondary-foreground/10">

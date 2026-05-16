@@ -1,4 +1,4 @@
-export type JenisDiklat = 'MULUD' | 'SYABAN' | 'RAMADHAN' | 'DZULHIJJAH';
+export type JenisDiklat = 'MAULID' | 'SYABAN' | 'RAMADHAN' | 'DZULHIJJAH';
 
 export interface IPesertaDiklat {
   id: number;

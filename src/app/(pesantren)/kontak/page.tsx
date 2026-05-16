@@ -1,7 +1,8 @@
 import Navbar from "@/components/landing/Navbar"
 import PageHeader from "@/components/layout/PageHeader"
 import Footer from "@/components/layout/Footer"
-import { MapPin, Phone, Mail, Clock, Send } from "lucide-react"
+import { MapPin, Phone, Globe, Clock, Send } from "lucide-react"
+import { CONTACT_TEXT, CONTACT_WHATSAPP_URL, SITE_URL } from "@/lib/site"
 
 export const metadata = {
   title: "Kontak Kami",
@@ -44,17 +45,17 @@ export default function KontakPage() {
                   </div>
                   <div>
                     <div className="font-bold text-foreground mb-1 uppercase text-xs tracking-widest">Telepon</div>
-                    <p className="text-muted-foreground text-sm font-medium">+62 812-3456-7890</p>
+                    <p className="text-muted-foreground text-sm font-medium">{CONTACT_TEXT}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
-                    <Mail className="w-6 h-6" />
+                    <Globe className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="font-bold text-foreground mb-1 uppercase text-xs tracking-widest">Email</div>
-                    <p className="text-muted-foreground text-sm font-medium">info@alhasanah.sch.id</p>
+                    <div className="font-bold text-foreground mb-1 uppercase text-xs tracking-widest">Website</div>
+                    <p className="text-muted-foreground text-sm font-medium">{SITE_URL}</p>
                   </div>
                 </div>
 
@@ -77,7 +78,7 @@ export default function KontakPage() {
                 Butuh respon cepat? Hubungi kami via WhatsApp untuk konsultasi pendaftaran santri baru.
               </p>
               <a 
-                href="https://wa.me/6281234567890" 
+                href={CONTACT_WHATSAPP_URL} 
                 target="_blank"
                 className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest hover:scale-105 transition-all relative z-10"
               >

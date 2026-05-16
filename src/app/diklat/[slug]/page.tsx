@@ -5,6 +5,7 @@ import OtherDiklat from "@/components/diklat/OtherDiklat"
 import Leadership from "@/components/landing/Leadership"
 import Footer from "@/components/layout/Footer"
 import Image from "next/image"
+import { getDiklatOverview } from "@/lib/diklat"
 
 export default async function DiklatDetailPage({ 
   params 
@@ -12,6 +13,7 @@ export default async function DiklatDetailPage({
   params: Promise<{ slug: string }> 
 }) {
   const { slug } = await params;
+  const { config, programs } = await getDiklatOverview()
 
   return (
     <main className="min-h-screen bg-white">
@@ -62,8 +64,8 @@ export default async function DiklatDetailPage({
         </div>
       </section>
 
-      <UpcomingDiklat />
-      <OtherDiklat />
+      <UpcomingDiklat config={config} programs={programs} />
+      <OtherDiklat programs={programs} />
       <Leadership />
 
       <Footer />

@@ -9,8 +9,11 @@ import UpcomingDiklat from "@/components/diklat/UpcomingDiklat"
 import BeritaSection from "@/components/pesantren/BeritaSection"
 import CTASection from "@/components/pesantren/CTASection"
 import Footer from "@/components/layout/Footer"
+import { getDiklatOverview } from "@/lib/diklat"
 
-export default function Home() {
+export default async function Home() {
+  const { config, programs } = await getDiklatOverview()
+
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
@@ -34,7 +37,7 @@ export default function Home() {
       <FasilitasSection />
       
       {/* 7. Upcoming Diklat (Pindahan) */}
-      <UpcomingDiklat />
+      <UpcomingDiklat config={config} programs={programs} />
       
       {/* 8. Berita Section (Baru - 3 Berita Terbaru) */}
       <BeritaSection />
