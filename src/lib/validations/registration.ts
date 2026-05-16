@@ -10,6 +10,7 @@ export const registrationSchema = z.object({
   alamat_lengkap: z.string().min(10, "Alamat lengkap minimal 10 karakter"),
   no_telepon: z.string().min(10, "No telepon minimal 10 digit"),
   pesantren_asal: z.string().min(3, "Pesantren asal minimal 3 karakter"),
+  jenis_kelamin: z.enum(['L', 'P']),
   jenis_diklat: z.enum(['MAULID', 'SYABAN', 'RAMADHAN', 'DZULHIJJAH']),
   tahun_diklat: z.number(),
   periode: z.number(),

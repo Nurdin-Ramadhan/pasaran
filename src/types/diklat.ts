@@ -12,6 +12,7 @@ export interface IPesertaDiklat {
   alamat_lengkap: string;
   no_telepon: string;
   pesantren_asal: string;
+  jenis_kelamin: 'L' | 'P';
   jenis_diklat: JenisDiklat;
   tahun_diklat: number;
   biaya_pendaftaran: number;

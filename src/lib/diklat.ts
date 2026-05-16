@@ -102,8 +102,9 @@ export async function getDiklatOverview(): Promise<DiklatOverview> {
       .maybeSingle(),
     supabase
       .from("master_kitab")
-      .select("id,nama_kitab,harga,jenis_diklat,is_active")
+      .select("id,nama_kitab,harga,jenis_diklat,is_active,kategori")
       .eq("is_active", true)
+      .eq("kategori", "KITAB")
       .order("jenis_diklat", { ascending: true })
       .order("id", { ascending: true }),
     supabase

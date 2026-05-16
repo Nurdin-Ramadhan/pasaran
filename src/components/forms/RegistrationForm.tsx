@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { FieldPath, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { registrationSchema, RegistrationValues } from "@/lib/validations/registration"
@@ -28,6 +28,9 @@ interface Kitab {
   nama_kitab: string;
   harga: number;
   jenis_diklat: string;
+  jenis_kelamin: "L" | "P" | "ALL";
+  kategori: "KITAB" | "PERLENGKAPAN" | "BUKU";
+  is_wajib: boolean;
 }
 
 interface DiklatConfig {
@@ -37,6 +40,10 @@ interface DiklatConfig {
   biaya_listrik: number | string;
   kos_makan: number | string;
   tafaruqon: number | string;
+  uang_miftah_putri: number | string | null;
+  biaya_listrik_putri: number | string | null;
+  kos_makan_putri: number | string | null;
+  tafaruqon_putri: number | string | null;
 }
 
 type RegistrationFormProps = {
@@ -78,6 +85,10 @@ const defaultDzulhijjahKitabNames = [
   "Tuhfatul Mustaq",
   "Wad'ul Kalimah",
 ]
+const jenisKelaminOptions: Array<{ value: RegistrationValues["jenis_kelamin"]; label: string }> = [
+  { value: "L", label: "Laki-laki" },
+  { value: "P", label: "Perempuan" },
+]
 
 const toNumber = (value: number | string | null | undefined) => {
   const numberValue = Number(value)
@@ -86,12 +97,53 @@ const toNumber = (value: number | string | null | undefined) => {
 
 const normalizeKitabName = (name: string) => name.trim().toLowerCase()
 
-const getDefaultDzulhijjahKitabIds = (kitabList: Kitab[]) => {
+const isKitabVisibleForGender = (kitab: Kitab, jenisKelamin: RegistrationValues["jenis_kelamin"]) => {
+  return kitab.jenis_kelamin === "ALL" || kitab.jenis_kelamin === jenisKelamin
+}
+
+const getRequiredKitabIds = (
+  kitabList: Kitab[],
+  jenisDiklat: RegistrationValues["jenis_diklat"],
+  jenisKelamin: RegistrationValues["jenis_kelamin"]
+) => {
+  return kitabList
+    .filter((kitab) => kitab.jenis_diklat === jenisDiklat && kitab.is_wajib && isKitabVisibleForGender(kitab, jenisKelamin))
+    .map((kitab) => kitab.id)
+}
+
+const getDefaultKitabIds = (
+  kitabList: Kitab[],
+  jenisDiklat: RegistrationValues["jenis_diklat"],
+  jenisKelamin: RegistrationValues["jenis_kelamin"]
+) => {
+  const requiredIds = getRequiredKitabIds(kitabList, jenisDiklat, jenisKelamin)
+  if (jenisDiklat !== "DZULHIJJAH") return requiredIds
+
   const defaultNames = new Set(defaultDzulhijjahKitabNames.map(normalizeKitabName))
 
-  return kitabList
-    .filter((kitab) => kitab.jenis_diklat === "DZULHIJJAH" && defaultNames.has(normalizeKitabName(kitab.nama_kitab)))
+  const defaultIds = kitabList
+    .filter((kitab) => kitab.jenis_diklat === "DZULHIJJAH" && isKitabVisibleForGender(kitab, jenisKelamin) && defaultNames.has(normalizeKitabName(kitab.nama_kitab)))
     .map((kitab) => kitab.id)
+
+  return Array.from(new Set([...defaultIds, ...requiredIds]))
+}
+
+const getFeesForGender = (config: DiklatConfig, jenisKelamin: RegistrationValues["jenis_kelamin"]) => {
+  if (jenisKelamin === "P") {
+    return {
+      uang_miftah: toNumber(config.uang_miftah_putri ?? config.uang_miftah),
+      biaya_listrik: toNumber(config.biaya_listrik_putri ?? config.biaya_listrik),
+      kos_makan: toNumber(config.kos_makan_putri ?? config.kos_makan),
+      tafaruqon: toNumber(config.tafaruqon_putri ?? config.tafaruqon),
+    }
+  }
+
+  return {
+    uang_miftah: toNumber(config.uang_miftah),
+    biaya_listrik: toNumber(config.biaya_listrik),
+    kos_makan: toNumber(config.kos_makan),
+    tafaruqon: toNumber(config.tafaruqon),
+  }
 }
 
 export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: RegistrationFormProps) {
@@ -126,6 +178,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
       alamat_lengkap: "",
       no_telepon: "",
       pesantren_asal: "",
+      jenis_kelamin: "L",
       jenis_diklat: initialJenisDiklat,
       tahun_diklat: 1447,
       periode: 1, // Add default value for periode
@@ -139,9 +192,14 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     },
   })
 
-  const { setValue, trigger } = form
+  const { getValues, setValue, trigger } = form
   const currentJenisDiklat = useWatch({ control: form.control, name: "jenis_diklat" })
+  const currentJenisKelamin = useWatch({ control: form.control, name: "jenis_kelamin" })
   const tahunDiklat = useWatch({ control: form.control, name: "tahun_diklat" })
+  const uangMiftah = useWatch({ control: form.control, name: "uang_miftah" })
+  const biayaListrik = useWatch({ control: form.control, name: "biaya_listrik" })
+  const kosMakan = useWatch({ control: form.control, name: "kos_makan" })
+  const tafaruqon = useWatch({ control: form.control, name: "tafaruqon" })
   const biayaPendaftaran = useWatch({ control: form.control, name: "biaya_pendaftaran" })
   const belanjaKitabNominal = useWatch({ control: form.control, name: "belanja_kitab_nominal" })
 
@@ -158,6 +216,15 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     window.scrollTo({ top: Math.max(y, 0), behavior: "smooth" })
   }, [step])
 
+  const applyConfigFees = useCallback((activeConfig: DiklatConfig, jenisKelamin: RegistrationValues["jenis_kelamin"]) => {
+    const fees = getFeesForGender(activeConfig, jenisKelamin)
+    setValue("uang_miftah", fees.uang_miftah)
+    setValue("biaya_listrik", fees.biaya_listrik)
+    setValue("kos_makan", fees.kos_makan)
+    setValue("tafaruqon", fees.tafaruqon)
+    setValue("biaya_pendaftaran", fees.uang_miftah + fees.biaya_listrik + fees.kos_makan + fees.tafaruqon)
+  }, [setValue])
+
   useEffect(() => {
     async function loadInitialData() {
       const supabase = createClient()
@@ -165,19 +232,11 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
       
       if (configData) {
         const activeConfig = configData as DiklatConfig
-        const uangMiftah = toNumber(activeConfig.uang_miftah)
-        const biayaListrik = toNumber(activeConfig.biaya_listrik)
-        const kosMakan = toNumber(activeConfig.kos_makan)
-        const tafaruqon = toNumber(activeConfig.tafaruqon)
 
         setConfig(activeConfig)
         setValue("tahun_diklat", activeConfig.tahun_hijriah)
         setValue("periode", toNumber(activeConfig.periode) || 1)
-        setValue("uang_miftah", uangMiftah)
-        setValue("biaya_listrik", biayaListrik)
-        setValue("kos_makan", kosMakan)
-        setValue("tafaruqon", tafaruqon)
-        setValue("biaya_pendaftaran", uangMiftah + biayaListrik + kosMakan + tafaruqon)
+        applyConfigFees(activeConfig, getValues("jenis_kelamin"))
       }
 
       const { data: kitabData } = await supabase.from('master_kitab').select('*').eq('is_active', true)
@@ -185,11 +244,14 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
         const normalizedKitab = kitabData.map((kitab) => ({
           ...kitab,
           harga: toNumber(kitab.harga),
+          jenis_kelamin: kitab.jenis_kelamin ?? "ALL",
+          kategori: kitab.kategori ?? "KITAB",
+          is_wajib: Boolean(kitab.is_wajib),
         }))
         setMasterKitab(normalizedKitab)
 
         if (initialJenisDiklat === "DZULHIJJAH") {
-          const defaultIds = getDefaultDzulhijjahKitabIds(normalizedKitab)
+          const defaultIds = getDefaultKitabIds(normalizedKitab, "DZULHIJJAH", "L")
           if (defaultIds.length > 0) {
             setSelectedKitabIds(defaultIds)
             defaultDzulhijjahKitabAppliedRef.current = true
@@ -199,7 +261,12 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
       setIsLoading(false)
     }
     loadInitialData()
-  }, [initialJenisDiklat, setValue])
+  }, [applyConfigFees, getValues, initialJenisDiklat, setValue])
+
+  useEffect(() => {
+    if (!config) return
+    applyConfigFees(config, currentJenisKelamin)
+  }, [applyConfigFees, config, currentJenisKelamin])
 
   useEffect(() => {
     if (dobDay && dobMonth && dobYear) {
@@ -207,7 +274,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     }
   }, [dobDay, dobMonth, dobYear, form])
 
-  const filteredKitab = masterKitab.filter(k => k.jenis_diklat === currentJenisDiklat)
+  const filteredKitab = masterKitab.filter(k => k.jenis_diklat === currentJenisDiklat && isKitabVisibleForGender(k, currentJenisKelamin))
 
   useEffect(() => {
     const selectedKitabs = masterKitab.filter(k => selectedKitabIds.includes(k.id))
@@ -218,7 +285,19 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
   }, [selectedKitabIds, masterKitab, setValue])
 
   const toggleKitab = (id: number) => {
+    const kitab = masterKitab.find((item) => item.id === id)
+    if (kitab?.is_wajib) return
+
     setSelectedKitabIds(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id])
+  }
+
+  const handleJenisKelaminChange = (value: RegistrationValues["jenis_kelamin"] | null) => {
+    if (!value) return
+
+    setValue("jenis_kelamin", value, { shouldDirty: true, shouldValidate: true })
+    if (config) applyConfigFees(config, value)
+    setSelectedKitabIds(getDefaultKitabIds(masterKitab, currentJenisDiklat, value))
+    defaultDzulhijjahKitabAppliedRef.current = currentJenisDiklat === "DZULHIJJAH"
   }
 
   const handleJenisDiklatChange = (value: RegistrationValues["jenis_diklat"] | null) => {
@@ -226,10 +305,10 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
 
     setValue("jenis_diklat", value, { shouldDirty: true, shouldValidate: true })
     if (value === "DZULHIJJAH") {
-      setSelectedKitabIds(getDefaultDzulhijjahKitabIds(masterKitab))
+      setSelectedKitabIds(getDefaultKitabIds(masterKitab, value, currentJenisKelamin))
       defaultDzulhijjahKitabAppliedRef.current = true
     } else {
-      setSelectedKitabIds([])
+      setSelectedKitabIds(getDefaultKitabIds(masterKitab, value, currentJenisKelamin))
       defaultDzulhijjahKitabAppliedRef.current = false
     }
   }
@@ -238,7 +317,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     e.preventDefault() // Explicitly prevent form submission
     let fieldsToValidate: FieldPath<RegistrationValues>[] = []
     if (step === 1) {
-      fieldsToValidate = ["nama_lengkap", "no_telepon", "pesantren_asal", "nama_wali", "pekerjaan_wali", "alamat_lengkap", "tempat_lahir", "tanggal_lahir"]
+      fieldsToValidate = ["nama_lengkap", "no_telepon", "pesantren_asal", "nama_wali", "pekerjaan_wali", "alamat_lengkap", "tempat_lahir", "tanggal_lahir", "jenis_kelamin"]
     } else if (step === 2) {
       fieldsToValidate = ["jenis_diklat"]
     }
@@ -360,6 +439,27 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                       )} />
                     </div>
 
+                    <FormField control={form.control} name="jenis_kelamin" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={fieldLabelClass}>Jenis Kelamin</FormLabel>
+                        <Select onValueChange={handleJenisKelaminChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className={cn(fieldInputClass, "text-foreground")}>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="rounded-2xl">
+                            {jenisKelaminOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value} className="font-bold py-3 uppercase tracking-widest">
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField control={form.control} name="tempat_lahir" render={({ field }) => (
                         <FormItem><FormLabel className={fieldLabelClass}>Tempat Lahir</FormLabel><FormControl><Input placeholder="Kota/Kabupaten" {...field} className={fieldInputClass} /></FormControl><FormMessage /></FormItem>
@@ -471,10 +571,10 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                         </div>
                         <ul className="space-y-3">
                           {[
-                            { label: "Uang Miftah", val: config?.uang_miftah },
-                            { label: "Listrik", val: config?.biaya_listrik },
-                            { label: "Kos Makan", val: config?.kos_makan },
-                            { label: "Tafaruqon", val: config?.tafaruqon },
+                            { label: currentJenisKelamin === "P" ? "Uang Miftah Putri" : "Uang Miftah Putra", val: uangMiftah },
+                            { label: "Listrik", val: biayaListrik },
+                            { label: "Kos Makan", val: kosMakan },
+                            { label: "Tafaruqon", val: tafaruqon },
                           ].map((item) => (
                             <li key={item.label} className="flex justify-between items-center text-muted-foreground text-sm">
                               <span className="font-bold">{item.label}</span>
@@ -516,8 +616,10 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                     <div className="flex items-center gap-4 mb-8">
                       <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary"><ShoppingBag className="w-6 h-6" /></div>
                       <div>
-                        <h3 className={sectionTitleClass}>Koperasi Kitab</h3>
-                        <p className={sectionSubtitleClass}>Pilih kitab yang belum Anda miliki</p>
+                        <h3 className={sectionTitleClass}>Koperasi Kitab & Perlengkapan</h3>
+                        <p className={sectionSubtitleClass}>
+                          {currentJenisKelamin === "P" ? "Pago dan Ratib wajib untuk peserta perempuan" : "Pilih kitab yang belum Anda miliki"}
+                        </p>
                       </div>
                     </div>
 
@@ -538,7 +640,17 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                                <BookOpen className="w-5 h-5" />
                             </div>
                             <div>
-                              <p className={`text-sm font-black tracking-tight ${selectedKitabIds.includes(kitab.id) ? 'text-foreground' : 'text-muted-foreground'}`}>{kitab.nama_kitab}</p>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <p className={`text-sm font-black tracking-tight ${selectedKitabIds.includes(kitab.id) ? 'text-foreground' : 'text-muted-foreground'}`}>{kitab.nama_kitab}</p>
+                                {kitab.is_wajib && (
+                                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-primary">
+                                    Wajib
+                                  </span>
+                                )}
+                              </div>
+                              {kitab.kategori !== "KITAB" && (
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">{kitab.kategori}</p>
+                              )}
                               <p className="text-xs font-mono font-black text-primary mt-1">Rp {kitab.harga.toLocaleString("id-ID")}</p>
                             </div>
                           </div>

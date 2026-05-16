@@ -375,6 +375,10 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
                 <Text style={styles.infoValue}>{data.no_telepon}</Text>
               </View>
               <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Jenis Kelamin</Text>
+                <Text style={styles.infoValue}>{data.jenis_kelamin === "P" ? "Perempuan" : "Laki-laki"}</Text>
+              </View>
+              <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Asal Pesantren</Text>
                 <Text style={styles.infoValue}>{data.pesantren_asal}</Text>
               </View>
