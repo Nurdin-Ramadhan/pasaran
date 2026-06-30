@@ -15,6 +15,7 @@ export interface IPesertaDiklat {
   jenis_kelamin: 'L' | 'P';
   jenis_diklat: JenisDiklat;
   tahun_diklat: number;
+  ruang: number | null;
   biaya_pendaftaran: number;
   belanja_kitab_nominal: number;
   rincian_belanja: string;

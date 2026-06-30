@@ -13,6 +13,7 @@ export const registrationSchema = z.object({
   jenis_kelamin: z.enum(['L', 'P']),
   jenis_diklat: z.enum(['MAULID', 'SYABAN', 'RAMADHAN', 'DZULHIJJAH']),
   tahun_diklat: z.number(),
+  ruang: z.number().nullable().optional(),
   periode: z.number(),
   biaya_pendaftaran: z.number().min(0),
   uang_miftah: z.number().min(0),

@@ -31,6 +31,7 @@ interface Kitab {
   jenis_kelamin: "L" | "P" | "ALL";
   kategori: "KITAB" | "PERLENGKAPAN" | "BUKU";
   is_wajib: boolean;
+  ruang: number | null;
 }
 
 interface DiklatConfig {
@@ -79,6 +80,12 @@ const sectionTitleClass = "text-2xl font-black text-foreground tracking-tight"
 const sectionSubtitleClass = "text-muted-foreground text-sm font-medium italic"
 
 const jenisDiklatOptions: RegistrationValues["jenis_diklat"][] = ["MAULID", "SYABAN", "RAMADHAN", "DZULHIJJAH"]
+const programsWithRuang: RegistrationValues["jenis_diklat"][] = ["MAULID", "RAMADHAN"]
+const ruangOptions = [
+  { value: 1, label: "Ruang 1" },
+  { value: 2, label: "Ruang 2" },
+  { value: 3, label: "Ruang 3" },
+]
 const defaultDzulhijjahKitabNames = [
   "Maqulat Mama Syuja'i",
   "Maqulat Mama Syatibi",
@@ -160,6 +167,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
   const [masterKitab, setMasterKitab] = useState<Kitab[]>([])
   const [selectedKitabIds, setSelectedKitabIds] = useState<number[]>([])
   const [config, setConfig] = useState<DiklatConfig | null>(null)
+  const [selectedRuang, setSelectedRuang] = useState<number | null>(null)
 
   // Custom Date Picker State
   const [dobDay, setDobDay] = useState("")
@@ -180,8 +188,9 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
       pesantren_asal: "",
       jenis_kelamin: "L",
       jenis_diklat: initialJenisDiklat,
-      tahun_diklat: 1447,
-      periode: 1, // Add default value for periode
+      tahun_diklat: 1448,
+      ruang: null,
+      periode: 1,
       biaya_pendaftaran: 0,
       uang_miftah: 0,
       biaya_listrik: 0,
@@ -195,6 +204,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
   const { getValues, setValue, trigger } = form
   const currentJenisDiklat = useWatch({ control: form.control, name: "jenis_diklat" })
   const currentJenisKelamin = useWatch({ control: form.control, name: "jenis_kelamin" })
+  const currentRuang = useWatch({ control: form.control, name: "ruang" })
   const tahunDiklat = useWatch({ control: form.control, name: "tahun_diklat" })
   const uangMiftah = useWatch({ control: form.control, name: "uang_miftah" })
   const biayaListrik = useWatch({ control: form.control, name: "biaya_listrik" })
@@ -247,6 +257,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
           jenis_kelamin: kitab.jenis_kelamin ?? "ALL",
           kategori: kitab.kategori ?? "KITAB",
           is_wajib: Boolean(kitab.is_wajib),
+          ruang: kitab.ruang ?? null,
         }))
         setMasterKitab(normalizedKitab)
 
@@ -274,15 +285,32 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     }
   }, [dobDay, dobMonth, dobYear, form])
 
-  const filteredKitab = masterKitab.filter(k => k.jenis_diklat === currentJenisDiklat && isKitabVisibleForGender(k, currentJenisKelamin))
+  const filteredKitab = masterKitab.filter(k => {
+    const matchJenis = k.jenis_diklat === currentJenisDiklat
+    const matchGender = isKitabVisibleForGender(k, currentJenisKelamin)
+    
+    // Jika program memiliki pembagian ruang
+    if (programsWithRuang.includes(currentJenisDiklat)) {
+      // Jika ruang dipilih, filter berdasarkan ruang
+      if (currentRuang !== null) {
+        return matchJenis && matchGender && k.ruang === currentRuang
+      }
+      // Jika ruang belum dipilih, tampilkan semua kitab untuk program ini
+      return matchJenis && matchGender
+    }
+    
+    // Jika tidak ada pembagian ruang (SYABAN, DZULHIJJAH)
+    return matchJenis && matchGender && (k.ruang === null || k.ruang === undefined)
+  })
+
+  const selectedKitabs = masterKitab.filter(k => selectedKitabIds.includes(k.id))
 
   useEffect(() => {
-    const selectedKitabs = masterKitab.filter(k => selectedKitabIds.includes(k.id))
     const totalHarga = selectedKitabs.reduce((acc, curr) => acc + Number(curr.harga), 0)
     const rincianString = selectedKitabs.map(k => k.nama_kitab).join(", ")
     setValue("belanja_kitab_nominal", totalHarga)
     setValue("rincian_belanja", rincianString)
-  }, [selectedKitabIds, masterKitab, setValue])
+  }, [selectedKitabs, setValue])
 
   const toggleKitab = (id: number) => {
     const kitab = masterKitab.find((item) => item.id === id)
@@ -304,6 +332,17 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     if (!value) return
 
     setValue("jenis_diklat", value, { shouldDirty: true, shouldValidate: true })
+    
+    // Reset ruang when changing diklat type
+    if (programsWithRuang.includes(value)) {
+      // Keep current ruang or set to null for user to select
+      setSelectedRuang(null)
+      setValue("ruang", null)
+    } else {
+      setSelectedRuang(null)
+      setValue("ruang", null)
+    }
+    
     if (value === "DZULHIJJAH") {
       setSelectedKitabIds(getDefaultKitabIds(masterKitab, value, currentJenisKelamin))
       defaultDzulhijjahKitabAppliedRef.current = true
@@ -313,6 +352,13 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     }
   }
 
+  const handleRuangChange = (value: number | null) => {
+    setSelectedRuang(value)
+    setValue("ruang", value, { shouldDirty: true, shouldValidate: true })
+    // Reset selected kitab when room changes
+    setSelectedKitabIds([])
+  }
+
   const nextStep = async (e: React.MouseEvent) => {
     e.preventDefault() // Explicitly prevent form submission
     let fieldsToValidate: FieldPath<RegistrationValues>[] = []
@@ -320,6 +366,12 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
       fieldsToValidate = ["nama_lengkap", "no_telepon", "pesantren_asal", "nama_wali", "pekerjaan_wali", "alamat_lengkap", "tempat_lahir", "tanggal_lahir", "jenis_kelamin"]
     } else if (step === 2) {
       fieldsToValidate = ["jenis_diklat"]
+      if (programsWithRuang.includes(currentJenisDiklat)) {
+        if (currentRuang === null || currentRuang === undefined) {
+          form.setError("ruang", { message: "Wajib memilih ruang kajian" })
+          return
+        }
+      }
     }
 
     const isValid = await trigger(fieldsToValidate)
@@ -589,6 +641,47 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                       </div>
                     </div>
 
+                    {/* Room Selection - Only for MAULID & RAMADHAN */}
+                    {programsWithRuang.includes(currentJenisDiklat) && (
+                      <div className="grid grid-cols-1 gap-6">
+                        <div className="bg-secondary/5 rounded-[2rem] p-6 border-2 border-secondary/10">
+                          <div className="flex items-center gap-2 mb-4 text-secondary font-black uppercase tracking-widest text-[10px]">
+                            <BookOpen className="w-4 h-4" /> PILIHAN RUANG
+                          </div>
+                          <p className="text-muted-foreground text-sm mb-4">
+                            Program {DIKLAT_LABELS[currentJenisDiklat]} memiliki beberapa ruang kajian. Pilih ruang yang ingin Anda ikuti.
+                          </p>
+                          <Select 
+                            onValueChange={(val) => handleRuangChange(val ? Number(val) : null)} 
+                            value={currentRuang?.toString() ?? ""}
+                          >
+                            <FormControl>
+                              <SelectTrigger className={cn(fieldInputClass, "text-foreground")}>
+                                <SelectValue placeholder="Pilih Ruang" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="rounded-2xl">
+                              {ruangOptions.map((option) => (
+                                <SelectItem key={option.value} value={option.value.toString()} className="font-bold py-3">
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {currentRuang && (
+                            <p className="text-primary text-xs font-bold mt-2">
+                              Kitab yang ditampilkan adalah kitab untuk {ruangOptions.find(r => r.value === currentRuang)?.label}
+                            </p>
+                          )}
+                          {!currentRuang && (
+                            <p className="text-muted-foreground text-xs font-bold mt-2 italic">
+                              *Wajib memilih ruang kajian
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                        {[
                          { icon: MapPin, text: "Lokasi: Pesantren Al-Hasanah" },
@@ -629,13 +722,25 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                           key={kitab.id}
                           onClick={() => toggleKitab(kitab.id)}
                           className={`group p-5 rounded-[2rem] border-2 transition-all cursor-pointer select-none ${
-                            selectedKitabIds.includes(kitab.id) 
-                            ? 'bg-primary/5 border-primary shadow-xl shadow-primary/10 -translate-y-1' 
-                            : 'bg-card border-border hover:border-primary/20 hover:-translate-y-1'
+                            kitab.is_wajib
+                              ? selectedKitabIds.includes(kitab.id)
+                                ? 'bg-amber-500/10 border-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.3)] -translate-y-1'
+                                : 'bg-amber-500/5 border-amber-400/40 shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+                              : selectedKitabIds.includes(kitab.id) 
+                                ? 'bg-primary/5 border-primary shadow-xl shadow-primary/10 -translate-y-1' 
+                                : 'bg-card border-border hover:border-primary/20 hover:-translate-y-1'
                           }`}
                         >
                           <div className="flex flex-col gap-4">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${selectedKitabIds.includes(kitab.id) ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground group-hover:bg-primary/20 group-hover:text-primary'}`}>
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                              kitab.is_wajib
+                                ? selectedKitabIds.includes(kitab.id)
+                                  ? 'bg-amber-500 text-white'
+                                  : 'bg-amber-500/20 text-amber-600 group-hover:bg-amber-500/30'
+                                : selectedKitabIds.includes(kitab.id) 
+                                  ? 'bg-primary text-primary-foreground' 
+                                  : 'bg-muted text-muted-foreground group-hover:bg-primary/20 group-hover:text-primary'
+                            }`}>
                                <Checkbox checked={selectedKitabIds.includes(kitab.id)} className="sr-only" />
                                <BookOpen className="w-5 h-5" />
                             </div>
@@ -643,7 +748,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                               <div className="flex flex-wrap items-center gap-2">
                                 <p className={`text-sm font-black tracking-tight ${selectedKitabIds.includes(kitab.id) ? 'text-foreground' : 'text-muted-foreground'}`}>{kitab.nama_kitab}</p>
                                 {kitab.is_wajib && (
-                                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-primary">
+                                  <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]">
                                     Wajib
                                   </span>
                                 )}
@@ -651,7 +756,7 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                               {kitab.kategori !== "KITAB" && (
                                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">{kitab.kategori}</p>
                               )}
-                              <p className="text-xs font-mono font-black text-primary mt-1">Rp {kitab.harga.toLocaleString("id-ID")}</p>
+                              <p className={`text-xs font-mono font-black mt-1 ${kitab.is_wajib ? 'text-amber-600' : 'text-primary'}`}>Rp {kitab.harga.toLocaleString("id-ID")}</p>
                             </div>
                           </div>
                         </div>
@@ -671,6 +776,53 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                                 <p className="text-4xl font-black text-secondary-foreground tracking-tighter">Rp {(biayaPendaftaran + belanjaKitabNominal).toLocaleString("id-ID")}</p>
                              </div>
                           </div>
+
+                          {/* Rincian Biaya Wajib Diklat */}
+                          <div className="space-y-3">
+                            <p className="text-primary font-black uppercase tracking-widest text-[10px]">Biaya Wajib Diklat</p>
+                            <div className="bg-secondary-foreground/5 rounded-2xl border border-secondary-foreground/10 divide-y divide-secondary-foreground/10">
+                              {[
+                                { label: currentJenisKelamin === "P" ? "Uang Miftah Putri" : "Uang Miftah Putra", val: uangMiftah },
+                                { label: "Listrik", val: biayaListrik },
+                                { label: "Kos & Makan", val: kosMakan },
+                                { label: "Tafaruqon", val: tafaruqon },
+                              ].filter(item => toNumber(item.val) > 0).map((item) => (
+                                <div key={item.label} className="flex justify-between items-center px-4 py-3">
+                                  <span className="text-xs font-bold text-secondary-foreground/70">{item.label}</span>
+                                  <span className="font-mono font-black text-sm text-secondary-foreground">Rp {toNumber(item.val).toLocaleString("id-ID")}</span>
+                                </div>
+                              ))}
+                              <div className="flex justify-between items-center px-4 py-3 bg-primary/10">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Subtotal Biaya Wajib</span>
+                                <span className="font-mono font-black text-primary">Rp {biayaPendaftaran.toLocaleString("id-ID")}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Rincian Kitab & Perlengkapan */}
+                          {selectedKitabs.length > 0 && (
+                            <div className="space-y-3">
+                              <p className="text-primary font-black uppercase tracking-widest text-[10px]">Kitab & Perlengkapan</p>
+                              <div className="bg-secondary-foreground/5 rounded-2xl border border-secondary-foreground/10 divide-y divide-secondary-foreground/10">
+                                {selectedKitabs.map((kitab) => (
+                                  <div key={kitab.id} className="flex justify-between items-center px-4 py-3">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs font-bold text-secondary-foreground/70">{kitab.nama_kitab}</span>
+                                      {kitab.is_wajib && (
+                                        <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[8px] font-black uppercase tracking-widest text-amber-500">Wajib</span>
+                                      )}
+                                    </div>
+                                    <span className="font-mono font-black text-sm text-secondary-foreground">Rp {kitab.harga.toLocaleString("id-ID")}</span>
+                                  </div>
+                                ))}
+                                <div className="flex justify-between items-center px-4 py-3 bg-primary/10">
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Subtotal Kitab</span>
+                                  <span className="font-mono font-black text-primary">Rp {belanjaKitabNominal.toLocaleString("id-ID")}</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
                           <div className="flex items-start gap-3 p-4 bg-secondary-foreground/5 rounded-2xl border border-secondary-foreground/10">
                              <Heart className="w-5 h-5 text-primary shrink-0" />
                              <p className="text-xs text-secondary-foreground/70 leading-relaxed italic">

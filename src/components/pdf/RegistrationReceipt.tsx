@@ -382,6 +382,12 @@ export default function RegistrationReceipt({ data, qrCodeId, qrCodeDataUrl }: P
                 <Text style={styles.infoLabel}>Asal Pesantren</Text>
                 <Text style={styles.infoValue}>{data.pesantren_asal}</Text>
               </View>
+              {data.ruang && (
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabel}>Ruang Kajian</Text>
+                  <Text style={styles.infoValue}>Ruang {data.ruang}</Text>
+                </View>
+              )}
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Nama Wali</Text>
                 <Text style={styles.infoValue}>{data.nama_wali}</Text>

@@ -26,6 +26,10 @@ export type Kitab = {
   harga: number
   jenis_diklat: JenisDiklat
   is_active: boolean
+  jenis_kelamin: 'L' | 'P' | 'ALL'
+  kategori: 'KITAB' | 'PERLENGKAPAN' | 'BUKU'
+  is_wajib: boolean
+  ruang: number | null
 }
 
 export type DiklatParticipantStat = {

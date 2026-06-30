@@ -26,6 +26,10 @@ type RawKitab = {
   harga: number | string
   jenis_diklat: string
   is_active: boolean | null
+  jenis_kelamin: string | null
+  kategori: string | null
+  is_wajib: boolean | null
+  ruang: number | null
 }
 
 type RawParticipantStat = {
@@ -73,6 +77,10 @@ function normalizeKitab(row: RawKitab): Kitab | null {
     harga: toNumber(row.harga),
     jenis_diklat: row.jenis_diklat,
     is_active: Boolean(row.is_active),
+    jenis_kelamin: (row.jenis_kelamin as 'L' | 'P' | 'ALL') ?? 'ALL',
+    kategori: (row.kategori as 'KITAB' | 'PERLENGKAPAN' | 'BUKU') ?? 'KITAB',
+    is_wajib: Boolean(row.is_wajib),
+    ruang: row.ruang,
   }
 }
 
@@ -102,9 +110,8 @@ export async function getDiklatOverview(): Promise<DiklatOverview> {
       .maybeSingle(),
     supabase
       .from("master_kitab")
-      .select("id,nama_kitab,harga,jenis_diklat,is_active,kategori")
+      .select("id,nama_kitab,harga,jenis_diklat,is_active,jenis_kelamin,kategori,is_wajib,ruang")
       .eq("is_active", true)
-      .eq("kategori", "KITAB")
       .order("jenis_diklat", { ascending: true })
       .order("id", { ascending: true }),
     supabase
