@@ -153,7 +153,7 @@ const getFeesForGender = (config: DiklatConfig, jenisKelamin: RegistrationValues
   }
 }
 
-export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: RegistrationFormProps) {
+export default function RegistrationForm({ initialJenisDiklat = "MAULID" }: RegistrationFormProps) {
   const formTopRef = useRef<HTMLDivElement>(null)
   const hasMountedStepRef = useRef(false)
   const defaultDzulhijjahKitabAppliedRef = useRef(false)
@@ -355,8 +355,15 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
   const handleRuangChange = (value: number | null) => {
     setSelectedRuang(value)
     setValue("ruang", value, { shouldDirty: true, shouldValidate: true })
-    // Reset selected kitab when room changes
-    setSelectedKitabIds([])
+    // Auto-select mandatory kitab for the selected room
+    if (value !== null) {
+      const wajibKitabIds = masterKitab
+        .filter(k => k.jenis_diklat === "MAULID" && k.is_wajib && k.ruang === value && isKitabVisibleForGender(k, currentJenisKelamin))
+        .map(k => k.id)
+      setSelectedKitabIds(wajibKitabIds)
+    } else {
+      setSelectedKitabIds([])
+    }
   }
 
   const nextStep = async (e: React.MouseEvent) => {
@@ -365,12 +372,9 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
     if (step === 1) {
       fieldsToValidate = ["nama_lengkap", "no_telepon", "pesantren_asal", "nama_wali", "pekerjaan_wali", "alamat_lengkap", "tempat_lahir", "tanggal_lahir", "jenis_kelamin"]
     } else if (step === 2) {
-      fieldsToValidate = ["jenis_diklat"]
-      if (programsWithRuang.includes(currentJenisDiklat)) {
-        if (currentRuang === null || currentRuang === undefined) {
-          form.setError("ruang", { message: "Wajib memilih ruang kajian" })
-          return
-        }
+      // MAULID always requires ruang
+      if (currentRuang === null || currentRuang === undefined) {
+        return
       }
     }
 
@@ -595,26 +599,16 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <FormField control={form.control} name="jenis_diklat" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className={fieldLabelClass}>PROGRAM DIKLAT YANG AKAN DILAKSANAKAN</FormLabel>
-                          <Select onValueChange={handleJenisDiklatChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger className={cn(fieldInputClass, "text-foreground")}>
-                                <SelectValue />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="rounded-2xl">
-                              {jenisDiklatOptions.map((jenis) => (
-                                <SelectItem key={jenis} value={jenis} className="font-bold py-3 uppercase tracking-widest">
-                                  PASARAN {DIKLAT_LABELS[jenis].toUpperCase()}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
+                      <div className="space-y-3">
+                        <label className={cn(fieldLabelClass, "block")}>PROGRAM DIKLAT YANG AKAN DILAKSANAKAN</label>
+                        <div className="bg-primary/10 border-2 border-primary/30 rounded-2xl p-5 relative overflow-hidden">
+                          <div className="absolute top-0 right-0 w-20 h-20 bg-primary/20 rounded-full blur-xl" />
+                          <div className="relative z-10">
+                            <p className="text-xs font-bold text-primary uppercase tracking-widest mb-1">PASARAN / DIKLAT</p>
+                            <p className="text-2xl font-black text-primary">MAULID</p>
+                          </div>
+                        </div>
+                      </div>
 
                       <div className="bg-primary/5 rounded-[2rem] p-6 border-2 border-primary/10 relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
@@ -641,46 +635,66 @@ export default function RegistrationForm({ initialJenisDiklat = "DZULHIJJAH" }: 
                       </div>
                     </div>
 
-                    {/* Room Selection - Only for MAULID & RAMADHAN */}
-                    {programsWithRuang.includes(currentJenisDiklat) && (
-                      <div className="grid grid-cols-1 gap-6">
-                        <div className="bg-secondary/5 rounded-[2rem] p-6 border-2 border-secondary/10">
-                          <div className="flex items-center gap-2 mb-4 text-secondary font-black uppercase tracking-widest text-[10px]">
-                            <BookOpen className="w-4 h-4" /> PILIHAN RUANG
+                    {/* Room Selection - Only for MAULID */}
+                    <div className="grid grid-cols-1 gap-6">
+                      <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-[2rem] p-8 border-2 border-primary/20 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl" />
+                        <div className="relative z-10">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
+                              <BookOpen className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                              <p className="text-primary font-black uppercase tracking-widest text-sm">PILIH RUANG KAJIAN</p>
+                              <p className="text-primary/60 text-xs font-bold">Wajib dipilih sebelum melanjutkan</p>
+                            </div>
                           </div>
-                          <p className="text-muted-foreground text-sm mb-4">
-                            Program {DIKLAT_LABELS[currentJenisDiklat]} memiliki beberapa ruang kajian. Pilih ruang yang ingin Anda ikuti.
+                          
+                          <p className="text-secondary/80 text-sm mb-6 leading-relaxed">
+                            Program <span className="font-black text-secondary">Pasaran / Diklat MAULID</span> memiliki 3 ruang kajian dengan kitab yang berbeda. 
+                            Pilih ruang yang ingin Anda ikuti.
                           </p>
+
                           <Select 
                             onValueChange={(val) => handleRuangChange(val ? Number(val) : null)} 
                             value={currentRuang?.toString() ?? ""}
                           >
                             <FormControl>
-                              <SelectTrigger className={cn(fieldInputClass, "text-foreground")}>
-                                <SelectValue placeholder="Pilih Ruang" />
+                              <SelectTrigger className="rounded-2xl border-2 border-primary/30 h-16 bg-white text-lg font-bold focus:border-primary focus:ring-2 focus:ring-primary/20">
+                                <SelectValue placeholder=">>> PILIH RUANG <<<" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className="rounded-2xl">
                               {ruangOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value.toString()} className="font-bold py-3">
+                                <SelectItem key={option.value} value={option.value.toString()} className="font-bold py-4 text-lg">
                                   {option.label}
                                 </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
+
                           {currentRuang && (
-                            <p className="text-primary text-xs font-bold mt-2">
-                              Kitab yang ditampilkan adalah kitab untuk {ruangOptions.find(r => r.value === currentRuang)?.label}
-                            </p>
+                            <div className="mt-4 p-4 bg-white rounded-xl border-2 border-primary/20">
+                              <p className="text-primary text-sm font-black">
+                                ✓ Anda memilih <span className="text-lg">{ruangOptions.find(r => r.value === currentRuang)?.label}</span>
+                              </p>
+                              <p className="text-muted-foreground text-xs mt-1">
+                                Kitab yang ditampilkan akan disesuaikan dengan ruang yang dipilih.
+                              </p>
+                            </div>
                           )}
+
                           {!currentRuang && (
-                            <p className="text-muted-foreground text-xs font-bold mt-2 italic">
-                              *Wajib memilih ruang kajian
-                            </p>
+                            <div className="mt-4 p-4 bg-amber-50 rounded-xl border-2 border-amber-200">
+                              <p className="text-amber-700 text-sm font-bold flex items-center gap-2">
+                                <span className="text-lg">⚠️</span> Silakan pilih ruang kajian terlebih dahulu
+                              </p>
+                            </div>
                           )}
                         </div>
                       </div>
-                    )}
+                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                        {[
